@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  background-color: #f0f2f5;
+}
+
+#root {
+  display: flex;
+  width: 100vw;
+  --not-black: #232323;
+  --orange: #ff7417;
+  --light-orange: #ff6600;
+  --dark-orange: #be5d1d;
+  --very-dark-orange: #602c09;
+}

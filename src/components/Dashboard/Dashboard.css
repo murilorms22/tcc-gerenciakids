@@ -1,0 +1,155 @@
+.painel-container {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f0f2f5;
+  color: #333;
+  overflow-y: auto;
+  margin-left: 20%;
+}
+
+.painel-cabecalho {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.painel-cabecalho h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--orange);
+}
+
+.painel-cabecalho p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.painel-cabecalho button.fazer-chamada {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.painel-cabecalho button.fazer-chamada:hover {
+  background-color: var(--light-orange);
+}
+
+.painel-resumo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.cartao-resumo {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cartao-resumo h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.cartao-resumo .valor-resumo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--orange);
+}
+
+.conteudo-principal {
+  display: flex;
+  gap: 2rem;
+}
+
+.conteudo-esquerda {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.conteudo-direita {
+  flex: 1;
+}
+
+.cartao {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cartao h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.lista-atividades, 
+.lista-aniversarios {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item-atividade,
+.item-aniversario {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #444;
+}
+
+.titulo-atividade {
+  font-weight: 600;
+  margin: 0;
+}
+
+.acao-pequena {
+  color: #888;
+}
+
+.acoes-rapidas {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.botao-acao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.botao-acao:hover {
+  background-color: var(--light-orange);
+}
