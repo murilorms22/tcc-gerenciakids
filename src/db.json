@@ -1,4 +1,4 @@
-const dadosMockados = {
+{
   "escola": {
     "id_escola": 1,
     "nome": "EMEI Sonho de Criança"
@@ -10,34 +10,37 @@ const dadosMockados = {
     "ano_letivo": 2025,
     "id_professor_principal": 102
   },
-  "professor": {
-    "nome": "João Silva"
-  },
+  "professores": [
+    {
+      "id": 1,
+      "nome": "João Silva"
+    }
+],
   "responsaveis": [
-    { "id_responsavel": 301, "nome_completo": "Fernanda Souza", "parentesco": "Mãe" },
-    { "id_responsavel": 302, "nome_completo": "Lucas Martins", "parentesco": "Pai" },
-    { "id_responsavel": 303, "nome_completo": "Amanda Costa", "parentesco": "Mãe" },
-    { "id_responsavel": 304, "nome_completo": "Rodrigo Lima", "parentesco": "Pai" },
-    { "id_responsavel": 305, "nome_completo": "Beatriz Almeida", "parentesco": "Mãe" },
-    { "id_responsavel": 306, "nome_completo": "Tiago Pereira", "parentesco": "Pai" },
-    { "id_responsavel": 307, "nome_completo": "Camila Oliveira", "parentesco": "Mãe" },
-    { "id_responsavel": 308, "nome_completo": "Gustavo Ferreira", "parentesco": "Pai" },
-    { "id_responsavel": 309, "nome_completo": "Larissa Santos", "parentesco": "Mãe" },
-    { "id_responsavel": 310, "nome_completo": "Rafael Gomes", "parentesco": "Pai" },
-    { "id_responsavel": 311, "nome_completo": "Júlia Carvalho", "parentesco": "Mãe" },
-    { "id_responsavel": 312, "nome_completo": "Felipe Barros", "parentesco": "Pai" },
-    { "id_responsavel": 313, "nome_completo": "Mariana Rocha", "parentesco": "Mãe" },
-    { "id_responsavel": 314, "nome_completo": "Vinícius Castro", "parentesco": "Pai" },
-    { "id_responsavel": 315, "nome_completo": "Patrícia Ribeiro", "parentesco": "Avó" },
-    { "id_responsavel": 316, "nome_completo": "Cláudia Azevedo", "parentesco": "Mãe" },
-    { "id_responsavel": 317, "nome_completo": "Leonardo Dias", "parentesco": "Pai" },
-    { "id_responsavel": 318, "nome_completo": "Vanessa Nunes", "parentesco": "Mãe" },
-    { "id_responsavel": 319, "nome_completo": "Alexandre Mendes", "parentesco": "Pai" },
-    { "id_responsavel": 320, "nome_completo": "Sandra Pinto", "parentesco": "Mãe" }
+    { "id": 301, "nome_completo": "Fernanda Souza", "parentesco": "Mãe" },
+    { "id": 302, "nome_completo": "Lucas Martins", "parentesco": "Pai" },
+    { "id": 303, "nome_completo": "Amanda Costa", "parentesco": "Mãe" },
+    { "id": 304, "nome_completo": "Rodrigo Lima", "parentesco": "Pai" },
+    { "id": 305, "nome_completo": "Beatriz Almeida", "parentesco": "Mãe" },
+    { "id": 306, "nome_completo": "Tiago Pereira", "parentesco": "Pai" },
+    { "id": 307, "nome_completo": "Camila Oliveira", "parentesco": "Mãe" },
+    { "id": 308, "nome_completo": "Gustavo Ferreira", "parentesco": "Pai" },
+    { "id": 309, "nome_completo": "Larissa Santos", "parentesco": "Mãe" },
+    { "id": 310, "nome_completo": "Rafael Gomes", "parentesco": "Pai" },
+    { "id": 311, "nome_completo": "Júlia Carvalho", "parentesco": "Mãe" },
+    { "id": 312, "nome_completo": "Felipe Barros", "parentesco": "Pai" },
+    { "id": 313, "nome_completo": "Mariana Rocha", "parentesco": "Mãe" },
+    { "id": 314, "nome_completo": "Vinícius Castro", "parentesco": "Pai" },
+    { "id": 315, "nome_completo": "Patrícia Ribeiro", "parentesco": "Avó" },
+    { "id": 316, "nome_completo": "Cláudia Azevedo", "parentesco": "Mãe" },
+    { "id": 317, "nome_completo": "Leonardo Dias", "parentesco": "Pai" },
+    { "id": 318, "nome_completo": "Vanessa Nunes", "parentesco": "Mãe" },
+    { "id": 319, "nome_completo": "Alexandre Mendes", "parentesco": "Pai" },
+    { "id": 320, "nome_completo": "Sandra Pinto", "parentesco": "Mãe" }
   ],
   "alunos": [
     {
-      "id_aluno": 401,
+      "id": 401,
       "id_turma": 202,
       "nome_completo": "Arthur Costa Lima",
       "data_nascimento": "2022-05-15",
@@ -47,7 +50,7 @@ const dadosMockados = {
       "responsaveis_ids": [303, 304]
     },
     {
-      "id_aluno": 402,
+      "id": 402,
       "id_turma": 202,
       "nome_completo": "Helena Souza Martins",
       "data_nascimento": "2022-02-20",
@@ -57,7 +60,7 @@ const dadosMockados = {
       "responsaveis_ids": [301, 302]
     },
     {
-      "id_aluno": 403,
+      "id": 403,
       "id_turma": 202,
       "nome_completo": "Miguel Almeida Pereira",
       "data_nascimento": "2022-07-01",
@@ -67,7 +70,7 @@ const dadosMockados = {
       "responsaveis_ids": [305, 306]
     },
     {
-      "id_aluno": 404,
+      "id": 404,
       "id_turma": 202,
       "nome_completo": "Alice Oliveira Ferreira",
       "data_nascimento": "2022-04-18",
@@ -77,7 +80,7 @@ const dadosMockados = {
       "responsaveis_ids": [307, 308]
     },
     {
-      "id_aluno": 405,
+      "id": 405,
       "id_turma": 202,
       "nome_completo": "Bernardo Santos Gomes",
       "data_nascimento": "2022-09-30",
@@ -87,7 +90,7 @@ const dadosMockados = {
       "responsaveis_ids": [309, 310]
     },
     {
-      "id_aluno": 406,
+      "id": 406,
       "id_turma": 202,
       "nome_completo": "Laura Carvalho Barros",
       "data_nascimento": "2022-01-25",
@@ -97,7 +100,7 @@ const dadosMockados = {
       "responsaveis_ids": [311, 312]
     },
     {
-      "id_aluno": 407,
+      "id": 407,
       "id_turma": 202,
       "nome_completo": "Davi Rocha Castro",
       "data_nascimento": "2022-03-11",
@@ -107,7 +110,7 @@ const dadosMockados = {
       "responsaveis_ids": [313, 314]
     },
     {
-      "id_aluno": 408,
+      "id": 408,
       "id_turma": 202,
       "nome_completo": "Sophia Ribeiro",
       "data_nascimento": "2022-06-05",
@@ -117,7 +120,7 @@ const dadosMockados = {
       "responsaveis_ids": [315]
     },
     {
-      "id_aluno": 409,
+      "id": 409,
       "id_turma": 202,
       "nome_completo": "Theo Azevedo Dias",
       "data_nascimento": "2022-08-14",
@@ -127,7 +130,7 @@ const dadosMockados = {
       "responsaveis_ids": [316, 317]
     },
     {
-      "id_aluno": 410,
+      "id": 410,
       "id_turma": 202,
       "nome_completo": "Isabella Nunes Mendes",
       "data_nascimento": "2022-10-02",
@@ -137,7 +140,7 @@ const dadosMockados = {
       "responsaveis_ids": [318, 319]
     },
     {
-      "id_aluno": 411,
+      "id": 411,
       "id_turma": 202,
       "nome_completo": "Mateus Pinto",
       "data_nascimento": "2022-05-28",
@@ -147,7 +150,7 @@ const dadosMockados = {
       "responsaveis_ids": [320]
     },
     {
-      "id_aluno": 412,
+      "id": 412,
       "id_turma": 202,
       "nome_completo": "Lívia Gomes Santos",
       "data_nascimento": "2022-11-11",
@@ -157,7 +160,7 @@ const dadosMockados = {
       "responsaveis_ids": [309, 310]
     },
     {
-      "id_aluno": 413,
+      "id": 413,
       "id_turma": 202,
       "nome_completo": "Enzo Ferreira Oliveira",
       "data_nascimento": "2022-01-09",
@@ -167,7 +170,7 @@ const dadosMockados = {
       "responsaveis_ids": [307, 308]
     },
     {
-      "id_aluno": 414,
+      "id": 414,
       "id_turma": 202,
       "nome_completo": "Maria Júlia Dias Azevedo",
       "data_nascimento": "2022-12-01",
@@ -178,5 +181,3 @@ const dadosMockados = {
     }
   ]
 }
-
-export default dadosMockados;

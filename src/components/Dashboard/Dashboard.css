@@ -4,7 +4,6 @@
   background-color: #f0f2f5;
   color: #333;
   overflow-y: auto;
-  margin-left: 20%;
 }
 
 .painel-cabecalho {
@@ -17,7 +16,7 @@
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
-  color: var(--orange);
+  color: #2c3e50;
 }
 
 .painel-cabecalho p {
@@ -39,6 +38,7 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
+  margin-left: 40px;
 }
 
 .painel-cabecalho button.fazer-chamada:hover {
@@ -53,23 +53,23 @@
 }
 
 .cartao-resumo {
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 1.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-left: 5px solid #f5741e;
 }
 
 .cartao-resumo h3 {
   font-size: 1rem;
-  font-weight: 500;
-  color: #666;
+  color: #7f8c8d;
   margin-bottom: 0.5rem;
 }
 
-.cartao-resumo .valor-resumo {
+.valor-resumo {
   font-size: 2rem;
   font-weight: bold;
-  color: var(--orange);
+  color: #2c3e50;
 }
 
 .conteudo-principal {
@@ -89,18 +89,16 @@
 }
 
 .cartao {
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 1.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
 }
 
 .cartao h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
   margin-bottom: 1rem;
+  color: #2c3e50;
 }
 
 .lista-atividades, 
