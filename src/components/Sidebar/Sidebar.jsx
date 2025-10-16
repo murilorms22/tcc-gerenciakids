@@ -2,13 +2,14 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faUserGroup, faBell, faEnvelope, faCalendar, faGear } from '@fortawesome/free-solid-svg-icons';
+import logo from '../../assets/logo.png';
 import './Sidebar.css';
 
 function Sidebar() {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        GerenciaKids
+        <img src={logo} alt="" />
       </div>
       <nav className="sidebar-nav">
         <ul>

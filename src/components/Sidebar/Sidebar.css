@@ -1,13 +1,21 @@
 .sidebar {
-  width: 250px;
+  width: 400px;
   background: var(--orange);
   color: #fff;
   display: flex;
   flex-direction: column;
 }
 
+img {
+  width: 330px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px 28px;
+  border-inline: 4px solid var(--orange);
+}
+
 .sidebar-header {
-  height: 4rem;
+  height: 6rem;
   margin-block: 1rem;
   display: flex;
   align-items: center;

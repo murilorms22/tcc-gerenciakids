@@ -158,26 +158,6 @@
       "alergias": "Nenhuma",
       "observacoes": "Está em processo de desfralde.",
       "responsaveis_ids": [309, 310]
-    },
-    {
-      "id": 413,
-      "id_turma": 202,
-      "nome_completo": "Enzo Ferreira Oliveira",
-      "data_nascimento": "2022-01-09",
-      "foto_perfil_url": "/path/to/fotos/enzo.jpg",
-      "alergias": "Ovo.",
-      "observacoes": "Se frustra facilmente quando não consegue montar um brinquedo. Precisa de incentivo.",
-      "responsaveis_ids": [307, 308]
-    },
-    {
-      "id": 414,
-      "id_turma": 202,
-      "nome_completo": "Maria Júlia Dias Azevedo",
-      "data_nascimento": "2022-12-01",
-      "foto_perfil_url": "/path/to/fotos/maria_julia.jpg",
-      "alergias": "Nenhuma",
-      "observacoes": "A mais nova da turma. Ainda se adaptando à rotina.",
-      "responsaveis_ids": [316, 317]
     }
   ]
 }
