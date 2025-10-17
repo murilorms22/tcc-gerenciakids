@@ -3,8 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import AppLayout from './pages/AppLayout/AppLayout';
 import Dashboard from './components/Dashboard/Dashboard';
 import Login from './pages/Login/Login';
+import PaginaAlunos from './pages/PaginaAlunos/PaginaAlunos';
 
-const Alunos = () => <h1>Página de Alunos</h1>;
 const Avisos = () => <h1>Página de Avisos</h1>;
 const Agenda = () => <h1>Página da Agenda</h1>;
 const Mensagens = () => <h1>Página de Mensagens</h1>;
@@ -17,7 +17,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<AppLayout />}>
         <Route index element={<Dashboard />} />
-        <Route path="alunos" element={<Alunos />} />
+        <Route path="alunos" element={<PaginaAlunos />} />
         <Route path="avisos" element={<Avisos />} />
         <Route path="agenda" element={<Agenda />} />
         <Route path="mensagens" element={<Mensagens />} />
