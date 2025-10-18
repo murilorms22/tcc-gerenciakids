@@ -12,10 +12,6 @@
   margin-top: 0.25rem;
 }
 
-.pagina-chamada-container .controles-container { /* ... */ }
-.pagina-chamada-container .campo-pesquisa { /* ... */ }
-/* ... (outros estilos dos controles) ... */
-
 .pagina-chamada-container .tabela-chamada-card {
   background-color: #fff;
   border-radius: 12px;
@@ -23,7 +19,6 @@
   overflow: hidden;
 }
 
-/* --- A CORREÇÃO PRINCIPAL ESTÁ AQUI --- */
 .pagina-chamada-container .tabela-cabecalho, 
 .pagina-chamada-container .aluno-linha {
   display: grid;
