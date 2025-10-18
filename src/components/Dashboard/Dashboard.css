@@ -146,8 +146,13 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
+  width: 100%;;
 }
 
 .botao-acao:hover {
   background-color: var(--light-orange);
+}
+
+.navlink {
+  text-decoration: none;
 }

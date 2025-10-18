@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faUsers, faEnvelopeOpenText } from '@fortawesome/free-solid-svg-icons';
 import BotaoLaranja from '../BotaoLaranja/BotaoLaranja';
 import CardGrande from '../CardGrande/CardGrande';
+import { NavLink } from 'react-router-dom';
 
 const atividadesDoDia = [
     { id: 1, titulo: "Reunião com pais", horario: "15h", numeroSala: 3 },
@@ -67,41 +68,55 @@ function Dashboard() {
           <h1>Bem-vindo, Professor {professor.nome}!</h1>
           <p>Painel de controle da turma {turma.nome_turma}.</p>
         </div>
-        <div>
+        <NavLink to="/chamada" className="navlink">
           <button className="fazer-chamada">
             <FontAwesomeIcon icon={faPlus} />
             <span>Realizar chamada</span>
           </button>
-        </div>
+        </NavLink>
       </header>
 
       {/* SEÇÃO DE RESUMO AGORA PREENCHIDA */}
       <section className="painel-resumo">
-        <div className="cartao-resumo">
-          <h3>Alunos na Turma</h3>
-          <p className="valor-resumo">{alunos.length}</p>
-        </div>
-        <div className="cartao-resumo">
-          <h3>Novos Avisos</h3>
-          <p className="valor-resumo">3</p> {/* Valor fixo por enquanto */}
-        </div>
-        <div className="cartao-resumo">
-          <h3>Mensagens</h3>
-          <p className="valor-resumo">5 não lidas</p> {/* Valor fixo por enquanto */}
-        </div>
+        <NavLink to="/alunos" className="navlink">
+          <div className="cartao-resumo">
+            <h3>Alunos na Turma</h3>
+            <p className="valor-resumo">{alunos.length}</p>
+          </div>
+        </NavLink>
+        <NavLink to="/avisos" className="navlink">
+          <div className="cartao-resumo">
+            <h3>Novos Avisos</h3>
+            <p className="valor-resumo">3</p> {/* Valor fixo por enquanto */}
+          </div>
+        </NavLink>
+        <NavLink to="/mensagens" className="navlink">
+          <div className="cartao-resumo">
+            <h3>Mensagens</h3>
+            <p className="valor-resumo">5 não lidas</p> {/* Valor fixo por enquanto */}
+          </div>
+        </NavLink>
       </section>
 
       <main className="conteudo-principal">
         <div className="conteudo-esquerda">
-          <CardGrande titulo="Atividades do dia" atividades={atividadesDoDia} />
+          <NavLink to="/agenda" className="navlink">
+            <CardGrande titulo="Atividades do dia" atividades={atividadesDoDia} />
+          </NavLink>
         </div>
         <div className="conteudo-direita">
           <div className="cartao">
             <h2>Ações Rápidas</h2>
             <div className="acoes-rapidas">
-              <BotaoLaranja mensagem="Criar aviso" icone={faPlus} />
-              <BotaoLaranja mensagem="Gerenciar Alunos" icone={faUsers} />
-              <BotaoLaranja mensagem="Ler Mensagens" icone={faEnvelopeOpenText} />
+              <NavLink to="/avisos" className="navlink">
+                <BotaoLaranja mensagem="Criar aviso" icone={faPlus} />
+              </NavLink>
+              <NavLink to="/alunos" className="navlink">
+                <BotaoLaranja mensagem="Gerenciar Alunos" icone={faUsers} />
+              </NavLink>
+              <NavLink to="/mensagens" className="navlink">
+                <BotaoLaranja mensagem="Ler Mensagens" icone={faEnvelopeOpenText} />
+              </NavLink>
             </div>
           </div>
         </div>

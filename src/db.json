@@ -12,152 +12,278 @@
   },
   "professores": [
     {
-      "id": 1,
+      "id": "1",
       "nome": "João Silva"
     }
-],
+  ],
   "responsaveis": [
-    { "id": 301, "nome_completo": "Fernanda Souza", "parentesco": "Mãe" },
-    { "id": 302, "nome_completo": "Lucas Martins", "parentesco": "Pai" },
-    { "id": 303, "nome_completo": "Amanda Costa", "parentesco": "Mãe" },
-    { "id": 304, "nome_completo": "Rodrigo Lima", "parentesco": "Pai" },
-    { "id": 305, "nome_completo": "Beatriz Almeida", "parentesco": "Mãe" },
-    { "id": 306, "nome_completo": "Tiago Pereira", "parentesco": "Pai" },
-    { "id": 307, "nome_completo": "Camila Oliveira", "parentesco": "Mãe" },
-    { "id": 308, "nome_completo": "Gustavo Ferreira", "parentesco": "Pai" },
-    { "id": 309, "nome_completo": "Larissa Santos", "parentesco": "Mãe" },
-    { "id": 310, "nome_completo": "Rafael Gomes", "parentesco": "Pai" },
-    { "id": 311, "nome_completo": "Júlia Carvalho", "parentesco": "Mãe" },
-    { "id": 312, "nome_completo": "Felipe Barros", "parentesco": "Pai" },
-    { "id": 313, "nome_completo": "Mariana Rocha", "parentesco": "Mãe" },
-    { "id": 314, "nome_completo": "Vinícius Castro", "parentesco": "Pai" },
-    { "id": 315, "nome_completo": "Patrícia Ribeiro", "parentesco": "Avó" },
-    { "id": 316, "nome_completo": "Cláudia Azevedo", "parentesco": "Mãe" },
-    { "id": 317, "nome_completo": "Leonardo Dias", "parentesco": "Pai" },
-    { "id": 318, "nome_completo": "Vanessa Nunes", "parentesco": "Mãe" },
-    { "id": 319, "nome_completo": "Alexandre Mendes", "parentesco": "Pai" },
-    { "id": 320, "nome_completo": "Sandra Pinto", "parentesco": "Mãe" }
+    {
+      "id": "301",
+      "nome_completo": "Fernanda Souza",
+      "parentesco": "Mãe"
+    },
+    {
+      "id": "302",
+      "nome_completo": "Lucas Martins",
+      "parentesco": "Pai"
+    },
+    {
+      "id": "303",
+      "nome_completo": "Amanda Costa",
+      "parentesco": "Mãe"
+    },
+    {
+      "id": "304",
+      "nome_completo": "Rodrigo Lima",
+      "parentesco": "Pai"
+    },
+    {
+      "id": "305",
+      "nome_completo": "Beatriz Almeida",
+      "parentesco": "Mãe"
+    },
+    {
+      "id": "306",
+      "nome_completo": "Tiago Pereira",
+      "parentesco": "Pai"
+    },
+    {
+      "id": "307",
+      "nome_completo": "Camila Oliveira",
+      "parentesco": "Mãe"
+    },
+    {
+      "id": "308",
+      "nome_completo": "Gustavo Ferreira",
+      "parentesco": "Pai"
+    },
+    {
+      "id": "309",
+      "nome_completo": "Larissa Santos",
+      "parentesco": "Mãe"
+    },
+    {
+      "id": "310",
+      "nome_completo": "Rafael Gomes",
+      "parentesco": "Pai"
+    },
+    {
+      "id": "311",
+      "nome_completo": "Júlia Carvalho",
+      "parentesco": "Mãe"
+    },
+    {
+      "id": "312",
+      "nome_completo": "Felipe Barros",
+      "parentesco": "Pai"
+    },
+    {
+      "id": "313",
+      "nome_completo": "Mariana Rocha",
+      "parentesco": "Mãe"
+    },
+    {
+      "id": "314",
+      "nome_completo": "Vinícius Castro",
+      "parentesco": "Pai"
+    },
+    {
+      "id": "315",
+      "nome_completo": "Patrícia Ribeiro",
+      "parentesco": "Avó"
+    },
+    {
+      "id": "316",
+      "nome_completo": "Cláudia Azevedo",
+      "parentesco": "Mãe"
+    },
+    {
+      "id": "317",
+      "nome_completo": "Leonardo Dias",
+      "parentesco": "Pai"
+    },
+    {
+      "id": "318",
+      "nome_completo": "Vanessa Nunes",
+      "parentesco": "Mãe"
+    },
+    {
+      "id": "319",
+      "nome_completo": "Alexandre Mendes",
+      "parentesco": "Pai"
+    },
+    {
+      "id": "320",
+      "nome_completo": "Sandra Pinto",
+      "parentesco": "Mãe"
+    }
   ],
   "alunos": [
     {
-      "id": 401,
+      "id": "401",
       "id_turma": 202,
       "nome_completo": "Arthur Costa Lima",
       "data_nascimento": "2022-05-15",
       "foto_perfil_url": "/path/to/fotos/arthur.jpg",
       "alergias": "Nenhuma",
       "observacoes": "Muito ativo e curioso. Adora brincar no pátio.",
-      "responsaveis_ids": [303, 304]
+      "responsaveis_ids": [
+        303,
+        304
+      ],
+      "faltas": 0
     },
     {
-      "id": 402,
+      "id": "402",
       "id_turma": 202,
       "nome_completo": "Helena Souza Martins",
       "data_nascimento": "2022-02-20",
       "foto_perfil_url": "/path/to/fotos/helena.jpg",
       "alergias": "Proteína do leite de vaca (APLV). Dieta restrita.",
       "observacoes": "Precisa de ajuda para dormir, gosta de música de ninar.",
-      "responsaveis_ids": [301, 302]
+      "responsaveis_ids": [
+        301,
+        302
+      ],
+      "faltas": 0
     },
     {
-      "id": 403,
+      "id": "403",
       "id_turma": 202,
       "nome_completo": "Miguel Almeida Pereira",
       "data_nascimento": "2022-07-01",
       "foto_perfil_url": "/path/to/fotos/miguel.jpg",
       "alergias": "Alergia a picada de insetos.",
       "observacoes": "Comunicativo, gosta de conversar com os colegas e professores.",
-      "responsaveis_ids": [305, 306]
+      "responsaveis_ids": [
+        305,
+        306
+      ],
+      "faltas": 0
     },
     {
-      "id": 404,
+      "id": "404",
       "id_turma": 202,
       "nome_completo": "Alice Oliveira Ferreira",
       "data_nascimento": "2022-04-18",
       "foto_perfil_url": "/path/to/fotos/alice.jpg",
       "alergias": "Glúten (sensibilidade).",
       "observacoes": "É um pouco tímida no início, mas se solta nas brincadeiras em grupo.",
-      "responsaveis_ids": [307, 308]
+      "responsaveis_ids": [
+        307,
+        308
+      ],
+      "faltas": 2
     },
     {
-      "id": 405,
+      "id": "405",
       "id_turma": 202,
       "nome_completo": "Bernardo Santos Gomes",
       "data_nascimento": "2022-09-30",
       "foto_perfil_url": "/path/to/fotos/bernardo.jpg",
       "alergias": "Nenhuma",
       "observacoes": "Adora desenhar e montar blocos lógicos. Concentrado.",
-      "responsaveis_ids": [309, 310]
+      "responsaveis_ids": [
+        309,
+        310
+      ],
+      "faltas": 1
     },
     {
-      "id": 406,
+      "id": "406",
       "id_turma": 202,
       "nome_completo": "Laura Carvalho Barros",
       "data_nascimento": "2022-01-25",
       "foto_perfil_url": "/path/to/fotos/laura.jpg",
       "alergias": "Amendoim.",
       "observacoes": "Muito carinhosa com os colegas. Gosta de cuidar dos bonecos.",
-      "responsaveis_ids": [311, 312]
+      "responsaveis_ids": [
+        311,
+        312
+      ],
+      "faltas": 0
     },
     {
-      "id": 407,
+      "id": "407",
       "id_turma": 202,
       "nome_completo": "Davi Rocha Castro",
       "data_nascimento": "2022-03-11",
       "foto_perfil_url": "/path/to/fotos/davi.jpg",
       "alergias": "Corantes artificiais.",
       "observacoes": "Extremamente energético. Gosta de correr e brincar ao ar livre.",
-      "responsaveis_ids": [313, 314]
+      "responsaveis_ids": [
+        313,
+        314
+      ],
+      "faltas": 0
     },
     {
-      "id": 408,
+      "id": "408",
       "id_turma": 202,
       "nome_completo": "Sophia Ribeiro",
       "data_nascimento": "2022-06-05",
       "foto_perfil_url": "/path/to/fotos/sophia.jpg",
       "alergias": "Nenhuma",
       "observacoes": "Muito observadora e tranquila. Gosta de ouvir histórias.",
-      "responsaveis_ids": [315]
+      "responsaveis_ids": [
+        315
+      ],
+      "faltas": 0
     },
     {
-      "id": 409,
+      "id": "409",
       "id_turma": 202,
       "nome_completo": "Theo Azevedo Dias",
       "data_nascimento": "2022-08-14",
       "foto_perfil_url": "/path/to/fotos/theo.jpg",
       "alergias": "Lactose (intolerância).",
       "observacoes": "Gosta de explorar os brinquedos sozinho. Começou a formar frases completas.",
-      "responsaveis_ids": [316, 317]
+      "responsaveis_ids": [
+        316,
+        317
+      ],
+      "faltas": 0
     },
     {
-      "id": 410,
+      "id": "410",
       "id_turma": 202,
       "nome_completo": "Isabella Nunes Mendes",
       "data_nascimento": "2022-10-02",
       "foto_perfil_url": "/path/to/fotos/isabella.jpg",
       "alergias": "Nenhuma",
       "observacoes": "Adora dançar e cantar nas rodinhas de música.",
-      "responsaveis_ids": [318, 319]
+      "responsaveis_ids": [
+        318,
+        319
+      ],
+      "faltas": 0
     },
     {
-      "id": 411,
+      "id": "411",
       "id_turma": 202,
       "nome_completo": "Mateus Pinto",
       "data_nascimento": "2022-05-28",
       "foto_perfil_url": "/path/to/fotos/mateus.jpg",
       "alergias": "Poeira (rinite alérgica).",
       "observacoes": "Pode precisar de ajuda para limpar o nariz durante o dia.",
-      "responsaveis_ids": [320]
+      "responsaveis_ids": [
+        320
+      ],
+      "faltas": 0
     },
     {
-      "id": 412,
+      "id": "412",
       "id_turma": 202,
       "nome_completo": "Lívia Gomes Santos",
       "data_nascimento": "2022-11-11",
       "foto_perfil_url": "/path/to/fotos/livia.jpg",
       "alergias": "Nenhuma",
       "observacoes": "Está em processo de desfralde.",
-      "responsaveis_ids": [309, 310]
+      "responsaveis_ids": [
+        309,
+        310
+      ],
+      "faltas": 0
     }
   ]
 }

@@ -1,0 +1,106 @@
+.pagina-chamada-container {
+  width: 100%;
+}
+
+.pagina-chamada-container .pagina-chamada-cabecalho {
+  margin-bottom: 1.5rem;
+}
+
+.pagina-chamada-container .pagina-chamada-cabecalho p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin-top: 0.25rem;
+}
+
+.pagina-chamada-container .controles-container { /* ... */ }
+.pagina-chamada-container .campo-pesquisa { /* ... */ }
+/* ... (outros estilos dos controles) ... */
+
+.pagina-chamada-container .tabela-chamada-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* --- A CORREÇÃO PRINCIPAL ESTÁ AQUI --- */
+.pagina-chamada-container .tabela-cabecalho, 
+.pagina-chamada-container .aluno-linha {
+  display: grid;
+  grid-template-columns: 4fr 1fr; /* As 2 colunas corretas */
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  gap: 1rem;
+}
+
+.pagina-chamada-container .tabela-cabecalho {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  color: #7f8c8d;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.pagina-chamada-container .aluno-linha { border-bottom: 1px solid #f1f1f1; }
+.pagina-chamada-container .aluno-linha:last-child { border-bottom: none; }
+
+.pagina-chamada-container .coluna-nome {
+  font-weight: bold;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pagina-chamada-container .aluno-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.pagina-chamada-container .coluna-status {
+  text-align: center;
+}
+
+.pagina-chamada-container .checkbox-falta {
+  /* Estilo para deixar o checkbox maior e mais fácil de clicar */
+  transform: scale(1.5);
+  cursor: pointer;
+}
+
+.linha-sem-resultados {
+    padding: 2rem;
+    text-align: center;
+    color: #7f8c8d;
+}
+
+/* Rodapé com o botão de salvar */
+.rodape-chamada {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.botao-salvar-chamada {
+  background-color: #2ecc71; /* Verde para "Salvar" */
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.botao-salvar-chamada:hover {
+  background-color: #27ae60;
+}
+
+.botao-salvar-chamada:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
