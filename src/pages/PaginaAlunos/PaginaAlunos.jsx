@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faExclamationTriangle, faPlus, faSearch, faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import './PaginaAlunos.css';
@@ -123,6 +123,12 @@ function PaginaAlunos() {
     <div className="pagina-alunos-container">
       <header className="pagina-alunos-cabecalho">
         <h1>Gerenciamento de Alunos</h1>
+        <NavLink to="/chamada" className="navlink">
+          <button className="fazer-chamada">
+            <FontAwesomeIcon icon={faPlus} />
+            <span>Realizar chamada</span>
+          </button>
+        </NavLink>
       </header>
       
       <div className="controles-container">

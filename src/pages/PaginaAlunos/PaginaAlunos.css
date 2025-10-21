@@ -17,6 +17,26 @@
   color: var(--azul-escuro);
 }
 
+.pagina-alunos-cabecalho button.fazer-chamada {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-left: 40px;
+}
+
+.pagina-alunos-cabecalho button.fazer-chamada:hover {
+  background-color: var(--light-orange);
+}
+
 /* --- NOVOS ESTILOS PARA CONTROLES --- */
 .controles-container {
   display: flex;

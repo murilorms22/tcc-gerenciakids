@@ -6,7 +6,7 @@ import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import imgRegister from '../../assets/register-illustration.svg';
 import logo from '../../assets/logo.png';
 
-export function PaginaRegister() {
+export function PaginaRegister({register}) {
     const navigate = useNavigate();
 
   return (
@@ -29,7 +29,7 @@ export function PaginaRegister() {
                 <input type="password" id="senha"/>
                 <p className='forgotPassword'>Esqueceu a senha?</p>
               </div>
-              <BotaoLaranja mensagem="Entrar" icone={faSignInAlt}/>
+              <BotaoLaranja onClick={register} mensagem="Registrar" icone={faSignInAlt}/>
               <p className='semConta'>Já tem uma conta? <span onClick={() => navigate('/login')}>Entrar com uma conta!</span></p>
             </div>
         </div>

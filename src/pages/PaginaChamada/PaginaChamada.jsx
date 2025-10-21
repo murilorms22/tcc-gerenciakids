@@ -152,6 +152,7 @@ function PaginaChamada() {
       <div className="tabela-chamada-card">
         <div className="tabela-cabecalho">
           <div className="coluna-nome">Nome Completo</div>
+          <div className="coluna-numFaltas">Número de faltas</div>
           <div className="coluna-status">Faltou?</div>
         </div>
 
@@ -160,8 +161,11 @@ function PaginaChamada() {
             alunosFiltrados.map(aluno => (
               <div className="aluno-linha" key={aluno.id}>
                 <div className="coluna-nome">
-                  {/* <img src={aluno.foto_perfil_url} alt="" className="aluno-avatar" /> */}
+                  <img src={aluno.foto_perfil_url} alt="" className="aluno-avatar" />
                   <span>{aluno.nome_completo}</span>
+                </div>
+                <div className='coluna-numFaltas'>
+                  <span>{aluno.faltas || 0}</span>
                 </div>
                 <div className="coluna-status">
                   <input

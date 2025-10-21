@@ -13,7 +13,8 @@
   "professores": [
     {
       "id": "1",
-      "nome": "João Silva"
+      "nome": "João Silva",
+      "cargo": "Professor"
     }
   ],
   "responsaveis": [
