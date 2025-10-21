@@ -1,0 +1,93 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    height: 100vh;
+    align-items: center;
+}
+
+.body img.logo {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-320%);
+}
+
+.containers {
+    display: flex;
+    margin: auto;
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.containerEsquerda {
+    padding: 70px;
+    color: var(--azul-escuro);
+    height: 500px;
+    background-color: white;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.containerDireita {
+    padding: 30px;
+    color: var(--azul-escuro);
+    height: 500px;
+    background-color: white;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.containerDireita img {
+    height: 100%;
+    width: auto;
+}
+
+.tituloConta {
+    text-align: center;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.inputs div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.inputs label {
+    font-size: 20px;
+    color: var(--azul-escuro);
+}
+.inputs input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--azul-escuro);
+    border-radius: 5px;
+}
+
+.forgotPassword {
+    color: var(--orange);
+    text-align: right;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.semConta {
+    margin-top: 20px;
+    text-align: center;
+}
+
+p span {
+    color: var(--orange);
+    cursor: pointer;
+}

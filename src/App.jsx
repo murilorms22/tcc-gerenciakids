@@ -7,6 +7,7 @@ import PaginaAlunos from './pages/PaginaAlunos/PaginaAlunos';
 import PaginaChamada from './pages/PaginaChamada/PaginaChamada';
 import PaginaAlunosInfo from './pages/PaginaAlunosInfo/PaginaAlunosInfo';
 import { RotaProtegida } from './contexts/PrivateRoutes';
+import PaginaRegister from './pages/Register/PaginaRegister';
 
 const Avisos = () => <h1>Página de Avisos</h1>;
 const Agenda = () => <h1>Página da Agenda</h1>;
@@ -18,6 +19,7 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<PaginaRegister />} />
       <Route element={<RotaProtegida />}>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<Dashboard />} />
