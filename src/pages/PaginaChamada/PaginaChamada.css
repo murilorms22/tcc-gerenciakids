@@ -22,7 +22,7 @@
 .pagina-chamada-container .tabela-cabecalho, 
 .pagina-chamada-container .aluno-linha {
   display: grid;
-  grid-template-columns: 4fr 1fr; /* As 2 colunas corretas */
+  grid-template-columns: 4fr 1fr;
   align-items: center;
   padding: 1.25rem 1.5rem;
   gap: 1rem;
@@ -35,8 +35,13 @@
   border-bottom: 1px solid #dee2e6;
 }
 
-.pagina-chamada-container .aluno-linha { border-bottom: 1px solid #f1f1f1; }
-.pagina-chamada-container .aluno-linha:last-child { border-bottom: none; }
+.pagina-chamada-container .aluno-linha {
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.pagina-chamada-container .aluno-linha:last-child {
+  border-bottom: none;
+}
 
 .pagina-chamada-container .coluna-nome {
   font-weight: bold;
@@ -58,7 +63,6 @@
 }
 
 .pagina-chamada-container .checkbox-falta {
-  /* Estilo para deixar o checkbox maior e mais fácil de clicar */
   transform: scale(1.5);
   cursor: pointer;
 }
@@ -69,7 +73,6 @@
     color: #7f8c8d;
 }
 
-/* Rodapé com o botão de salvar */
 .rodape-chamada {
   margin-top: 2rem;
   display: flex;
@@ -77,7 +80,7 @@
 }
 
 .botao-salvar-chamada {
-  background-color: #2ecc71; /* Verde para "Salvar" */
+  background-color: #2ecc71;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;

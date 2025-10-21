@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Login from './pages/Login/Login';
 import PaginaAlunos from './pages/PaginaAlunos/PaginaAlunos';
 import PaginaChamada from './pages/PaginaChamada/PaginaChamada';
+import PaginaAlunosInfo from './pages/PaginaAlunosInfo/PaginaAlunosInfo';
 
 const Avisos = () => <h1>Página de Avisos</h1>;
 const Agenda = () => <h1>Página da Agenda</h1>;
@@ -26,6 +27,7 @@ function App() {
         <Route path="registro" element={<Registro />}/>
         <Route path="chamada" element={<PaginaChamada />}/>
         <Route path="*" element={<h1>Página não encontrada</h1>} />
+        <Route path="alunos/:id" element={<PaginaAlunosInfo />} />
       </Route>
     </Routes>
   );

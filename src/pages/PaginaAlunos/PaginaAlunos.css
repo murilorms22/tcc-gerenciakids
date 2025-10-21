@@ -14,7 +14,7 @@
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
-  color: #2c3e50;
+  color: var(--azul-escuro);
 }
 
 /* --- NOVOS ESTILOS PARA CONTROLES --- */
@@ -90,7 +90,7 @@
 }
 
 .cabecalho-ordenavel:hover {
-  color: #2c3e50;
+  color: var(--azul-escuro);
 }
 
 .aluno-linha {
@@ -102,11 +102,11 @@
 
 .coluna-nome {
   font-weight: bold;
-  color: #2c3e50;
+  color: var(--azul-escuro);
 }
 
 .alerta-alergia {
-  color: #e74c3c;
+  color: var(--orange);
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -126,7 +126,7 @@
   transition: background-color 0.2s;
 }
 
-.acao-btn.ver-detalhes { color: #3498db; }
+.acao-btn.ver-detalhes { color: var(--azul-escuro); }
 .acao-btn:hover { background-color: #f1f1f1; }
 
 .linha-sem-resultados {

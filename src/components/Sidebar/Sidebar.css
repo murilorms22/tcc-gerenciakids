@@ -6,12 +6,23 @@
   flex-direction: column;
 }
 
-img {
+/* img {
   width: 330px;
   background-color: white;
   border-radius: 8px;
   padding: 20px 28px;
   border-inline: 4px solid var(--orange);
+} */
+
+img {
+  width: 300px;
+  border-radius: 8px;
+  padding: 20px 28px;
+  filter: 
+      drop-shadow( 1.5px  0   0  white)
+      drop-shadow(-1.5px  0   0  white) 
+      drop-shadow( 0 1.5px 0  white)
+      drop-shadow( 0 -1.5px 0  white);
 }
 
 .sidebar-header {

@@ -7,16 +7,19 @@ import './PaginaAlunos.css';
 function calcularIdade(dataNascimento) {
   const hoje = new Date();
   const nascimento = new Date(dataNascimento);
-  return hoje.getFullYear() - nascimento.getFullYear();
+  let anos = hoje.getFullYear() - nascimento.getFullYear();
+  let meses = hoje.getMonth() - nascimento.getMonth();
+  if (meses < 0 || (meses === 0 && hoje.getDate() < nascimento.getDate())) {
+    anos--;
+  }
+  return anos;
 }
 
 function PaginaAlunos() {
   const [alunos, setAlunos] = useState([]);
   const [alunosFiltrados, setAlunosFiltrados] = useState([]);
-
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
-
   const [termoPesquisa, setTermoPesquisa] = useState('');
   const [mostrarApenasAlergicos, setMostrarApenasAlergicos] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: 'nome_completo', direction: 'ascending' });
@@ -45,7 +48,6 @@ function PaginaAlunos() {
         aluno.nome_completo.toLowerCase().includes(termoPesquisa.toLowerCase())
       );
     }
-
     if (mostrarApenasAlergicos) {
       alunosProcessados = alunosProcessados.filter(aluno =>
         aluno.alergias && aluno.alergias.toLowerCase() !== 'nenhuma'
@@ -54,19 +56,39 @@ function PaginaAlunos() {
 
     if (sortConfig.key !== null) {
       alunosProcessados.sort((a, b) => {
-        let valA = a[sortConfig.key];
-        let valB = b[sortConfig.key];
-        
-        if (sortConfig.key === 'data_nascimento') {
-            valA = new Date(valA);
-            valB = new Date(valB);
-        } else if (typeof valA === 'string') {
-            valA = valA.toLowerCase();
-            valB = valB.toLowerCase();
+        let valA, valB;
+
+        switch (sortConfig.key) {
+          case 'nome_completo':
+            valA = a.nome_completo.toLowerCase();
+            valB = b.nome_completo.toLowerCase();
+            break;
+          
+          case 'data_nascimento':
+            valA = new Date(a.data_nascimento);
+            valB = new Date(b.data_nascimento);
+            break;
+
+          case 'alergias':
+            valA = (a.alergias && a.alergias.toLowerCase() !== 'nenhuma') ? 1 : 0;
+            valB = (b.alergias && b.alergias.toLowerCase() !== 'nenhuma') ? 1 : 0;
+            break;
+          
+          default:
+            valA = a[sortConfig.key];
+            valB = b[sortConfig.key];
         }
 
         if (valA < valB) return sortConfig.direction === 'ascending' ? -1 : 1;
         if (valA > valB) return sortConfig.direction === 'ascending' ? 1 : -1;
+        
+        if (sortConfig.key !== 'nome_completo') {
+            const nomeA = a.nome_completo.toLowerCase();
+            const nomeB = b.nome_completo.toLowerCase();
+            if (nomeA < nomeB) return -1;
+            if (nomeA > nomeB) return 1;
+        }
+
         return 0;
       });
     }
@@ -77,25 +99,30 @@ function PaginaAlunos() {
 
   const handleSort = (key) => {
     let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+
+    if (sortConfig.key === key) {
+      direction = sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
+    } 
+    else if (key === 'alergias' || key === 'data_nascimento') {
       direction = 'descending';
     }
+
     setSortConfig({ key, direction });
   };
   
   const getSortIcon = (key) => {
-      if (sortConfig.key !== key) return faSort;
-      if (sortConfig.direction === 'ascending') return faSortUp;
-      return faSortDown;
+    if (sortConfig.key !== key) return faSort;
+    if (sortConfig.direction === 'ascending') return faSortUp;
+    return faSortDown;
   }
 
   if (carregando) return <h1>Carregando lista de alunos...</h1>;
   if (erro) return <h1>Erro: {erro}</h1>;
 
-return (
+  return (
     <div className="pagina-alunos-container">
       <header className="pagina-alunos-cabecalho">
-        <h1>Gerenciamento de Alunos - Turma 2{}</h1>
+        <h1>Gerenciamento de Alunos</h1>
       </header>
       
       <div className="controles-container">
@@ -143,7 +170,7 @@ return (
                   {aluno.alergias && aluno.alergias.toLowerCase() !== 'nenhuma' && (
                     <span className="alerta-alergia" title={aluno.alergias}>
                       <FontAwesomeIcon icon={faExclamationTriangle} />
-                      <span> Alergia</span>
+                      <span> {aluno.alergias}</span>
                     </span>
                   )}
                 </div>
