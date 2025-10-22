@@ -23,10 +23,10 @@ function Dashboard() {
     const buscarDados = async () => {
       try {
         const [profResponse, alunosResponse, turmaResponse] = await Promise.all([
-          fetch('http://localhost:3001/professores'), 
-          fetch('http://localhost:3001/alunos'),
-          fetch('http://localhost:3001/turma')
-        ]);
+          fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/professores'), 
+          fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos'), 
+          fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/turma'), 
+          ]);
 
         if (!profResponse.ok || !alunosResponse.ok || !turmaResponse.ok) {
           throw new Error('Falha ao buscar dados da API');

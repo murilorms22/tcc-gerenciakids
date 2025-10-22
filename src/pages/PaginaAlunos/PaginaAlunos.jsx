@@ -27,7 +27,7 @@ function PaginaAlunos() {
   useEffect(() => {
     const buscarAlunos = async () => {
       try {
-        const response = await fetch('http://localhost:3001/alunos?id_turma=202');
+        const response = await fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos?id_turma=202');
         if (!response.ok) throw new Error('Falha ao buscar a lista de alunos.');
         const data = await response.json();
         setAlunos(data);

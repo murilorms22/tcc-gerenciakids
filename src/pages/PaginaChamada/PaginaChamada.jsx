@@ -25,7 +25,7 @@ function PaginaChamada() {
     const buscarAlunos = async () => {
       try {
         // Busca os alunos da turma 202, como antes
-        const response = await fetch('http://localhost:3001/alunos?id_turma=202');
+        const response = await fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos?id_turma=202');
         if (!response.ok) throw new Error('Falha ao buscar a lista de alunos.');
         const data = await response.json();
         setAlunos(data);
@@ -93,7 +93,7 @@ function PaginaChamada() {
       const faltasAtuais = aluno.faltas || 0; // Garante que é um número
       
       // Usamos o método 'PATCH' para atualizar APENAS o campo de faltas
-      return fetch(`http://localhost:3001/alunos/${aluno.id}`, {
+      return fetch(`http://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos/${aluno.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ function PaginaChamada() {
       alert('Chamada salva com sucesso!');
       
       // Opcional: Atualizar a lista de alunos local com as novas contagens de faltas
-      const response = await fetch('http://localhost:3001/alunos?id_turma=202');
+      const response = await fetch('http://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos?id_turma=202');
       const data = await response.json();
       setAlunos(data);
       
