@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faExclamationTriangle, faPlus, faSearch, faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
-import './PaginaAlunos.css';
 
 function calcularIdade(dataNascimento) {
   const hoje = new Date();
@@ -27,7 +26,7 @@ function PaginaAlunos() {
   useEffect(() => {
     const buscarAlunos = async () => {
       try {
-        const response = await fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos?id_turma=202');
+        const response = await fetch('http://localhost:3001/alunos?id_turma=202');
         if (!response.ok) throw new Error('Falha ao buscar a lista de alunos.');
         const data = await response.json();
         setAlunos(data);
@@ -120,28 +119,29 @@ function PaginaAlunos() {
   if (erro) return <h1>Erro: {erro}</h1>;
 
   return (
-    <div className="pagina-alunos-container">
-      <header className="pagina-alunos-cabecalho">
-        <h1>Gerenciamento de Alunos</h1>
-        <NavLink to="/chamada" className="navlink">
-          <button className="fazer-chamada">
+    <div className="w-full p-8">
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-4xl font-bold text-(--azul-escuro)">Gerenciamento de Alunos</h1>
+        <NavLink to="/chamada" className="no-underline">
+          <button className="flex items-center justify-center gap-3 p-4 bg-(--orange) text-white border-none rounded-lg text-base cursor-pointer transition-colors duration-200 ml-10 hover:bg-(--light-orange)">
             <FontAwesomeIcon icon={faPlus} />
             <span>Realizar chamada</span>
           </button>
         </NavLink>
       </header>
       
-      <div className="controles-container">
-        <div className="campo-pesquisa">
-          <FontAwesomeIcon icon={faSearch} className="icone-pesquisa" />
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+        <div className="relative grow min-w-[250px]">
+          <FontAwesomeIcon icon={faSearch} className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-gray)" />
           <input
             type="text"
             placeholder="Pesquisar por nome..."
             value={termoPesquisa}
             onChange={(e) => setTermoPesquisa(e.target.value)}
+            className="w-full py-3 px-4 pl-10 rounded-lg border border-(--border-gray) text-base"
           />
         </div>
-        <div className="filtro-alergia">
+        <div className="flex items-center gap-2 text-sm text-(--not-black)">
           <input
             type="checkbox"
             id="filtroAlergia"
@@ -152,43 +152,43 @@ function PaginaAlunos() {
         </div>
       </div>
 
-      <div className="tabela-alunos-card">
-        <div className="tabela-cabecalho">
-          <div className="coluna-nome cabecalho-ordenavel" onClick={() => handleSort('nome_completo')}>
+      <div className="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div className="grid grid-cols-[3fr_1fr_2fr_1fr] items-center p-4 px-6 gap-4 bg-(--bg-gray-light) font-bold text-(--text-gray) border-b border-(--border-gray)">
+          <div className="cursor-pointer transition-colors duration-200 flex items-center gap-2 hover:text-(--azul-escuro)" onClick={() => handleSort('nome_completo')}>
             Nome Completo <FontAwesomeIcon icon={getSortIcon('nome_completo')} />
           </div>
-          <div className="coluna-idade cabecalho-ordenavel" onClick={() => handleSort('data_nascimento')}>
+          <div className="cursor-pointer transition-colors duration-200 flex items-center gap-2 hover:text-(--azul-escuro)" onClick={() => handleSort('data_nascimento')}>
             Idade <FontAwesomeIcon icon={getSortIcon('data_nascimento')} />
           </div>
-          <div className="coluna-alertas cabecalho-ordenavel" onClick={() => handleSort('alergias')}>
+          <div className="cursor-pointer transition-colors duration-200 flex items-center gap-2 hover:text-(--azul-escuro)" onClick={() => handleSort('alergias')}>
             Alertas <FontAwesomeIcon icon={getSortIcon('alergias')} />
           </div>
-          <div className="coluna-acoes">Ações</div>
+          <div>Ações</div>
         </div>
 
-        <div className="tabela-corpo">
+        <div>
           {alunosFiltrados.length > 0 ? (
             alunosFiltrados.map(aluno => (
-              <div className="aluno-linha" key={aluno.id}>
-                <div className="coluna-nome">{aluno.nome_completo}</div>
-                <div className="coluna-idade">{calcularIdade(aluno.data_nascimento)} anos</div>
-                <div className="coluna-alertas">
+              <div className="grid grid-cols-[3fr_1fr_2fr_1fr] items-center p-4 px-6 gap-4 border-b border-(--border-light) last:border-b-0" key={aluno.id}>
+                <div className="font-bold text-(--azul-escuro)">{aluno.nome_completo}</div>
+                <div>{calcularIdade(aluno.data_nascimento)} anos</div>
+                <div>
                   {aluno.alergias && aluno.alergias.toLowerCase() !== 'nenhuma' && (
-                    <span className="alerta-alergia" title={aluno.alergias}>
+                    <span className="text-(--orange) font-bold flex items-center gap-2" title={aluno.alergias}>
                       <FontAwesomeIcon icon={faExclamationTriangle} />
                       <span> {aluno.alergias}</span>
                     </span>
                   )}
                 </div>
-                <div className="coluna-acoes">
-                  <Link to={`/alunos/${aluno.id}`} className="acao-btn ver-detalhes" title="Ver detalhes">
+                <div className="flex justify-end gap-3">
+                  <Link to={`/alunos/${aluno.id}`} className="bg-transparent border-none cursor-pointer text-lg p-2 rounded-full w-[35px] h-[35px] flex items-center justify-center transition-colors duration-200 text-(--azul-escuro) hover:bg-(--border-light)" title="Ver detalhes">
                     <FontAwesomeIcon icon={faEye} />
                   </Link>
                 </div>
               </div>
             ))
           ) : (
-            <div className="linha-sem-resultados">Nenhum aluno encontrado.</div>
+            <div className="p-8 text-center text-(--text-gray)">Nenhum aluno encontrado.</div>
           )}
         </div>
       </div>

@@ -1,13 +1,12 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import './AppLayout.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
 
 function AppLayout() {
   return (
-    <div className="app-container"> 
+    <div className="flex min-h-screen w-full"> 
       <Sidebar />
-      <main className="main-content">
+      <main className="w-full p-4 bg-(--bg-page)">
         <Outlet />
       </main>
     </div>

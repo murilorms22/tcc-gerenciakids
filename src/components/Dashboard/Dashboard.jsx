@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './Dashboard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faUsers, faEnvelopeOpenText } from '@fortawesome/free-solid-svg-icons';
 import BotaoLaranja from '../BotaoLaranja/BotaoLaranja';
@@ -23,9 +22,9 @@ function Dashboard() {
     const buscarDados = async () => {
       try {
         const [profResponse, alunosResponse, turmaResponse] = await Promise.all([
-          fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/professores'), 
-          fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos'), 
-          fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/turma'), 
+          fetch('http://localhost:3001/professores'), 
+          fetch('http://localhost:3001/alunos'), 
+          fetch('http://localhost:3001/turma'), 
           ]);
 
         if (!profResponse.ok || !alunosResponse.ok || !turmaResponse.ok) {
@@ -54,22 +53,22 @@ function Dashboard() {
   }, []);
 
   if (carregando) {
-    return <div className="painel-container"><h1>Carregando informações...</h1></div>;
+    return <div className="flex-1 p-8 bg-(--bg-page) text-(--not-black) overflow-y-auto"><h1>Carregando informações...</h1></div>;
   }
-  
+
   if (erro) {
-    return <div className="painel-container"><h1>Erro: {erro}</h1></div>;
+    return <div className="flex-1 p-8 bg-(--bg-page) text-(--not-black) overflow-y-auto"><h1>Erro: {erro}</h1></div>;
   }
 
   return (
-    <div className="painel-container">
-      <header className="painel-cabecalho">
+    <div className="flex-1 p-8 bg-(--bg-page) text-(--not-black) overflow-y-auto">
+      <header className="flex flex-row justify-between">
         <div>
-          <h1>Bem-vindo, Professor {professor.nome}!</h1>
-          <p>Painel de controle da turma {turma.nome_turma}.</p>
+          <h1 className="text-4xl font-bold mb-2 text-(--azul-escuro)">Bem-vindo, Professor {professor.nome}!</h1>
+          <p className="text-base text-(--text-gray) mb-8">Painel de controle da turma {turma.nome_turma}.</p>
         </div>
-        <NavLink to="/chamada" className="navlink">
-          <button className="fazer-chamada">
+        <NavLink to="/chamada" className="no-underline">
+          <button className="flex items-center justify-center gap-3 p-4 bg-(--orange) text-white border-none rounded-lg text-base cursor-pointer transition-colors duration-200 ml-10 hover:bg-(--light-orange)">
             <FontAwesomeIcon icon={faPlus} />
             <span>Realizar chamada</span>
           </button>
@@ -77,44 +76,44 @@ function Dashboard() {
       </header>
 
       {/* SEÇÃO DE RESUMO AGORA PREENCHIDA */}
-      <section className="painel-resumo">
-        <NavLink to="/alunos" className="navlink">
-          <div className="cartao-resumo">
-            <h3>Alunos na Turma</h3>
-            <p className="valor-resumo">{alunos.length}</p>
+      <section className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6 mb-8">
+        <NavLink to="/alunos" className="no-underline">
+          <div className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-[5px] border-l-(--orange-accent)">
+            <h3 className="text-base text-(--text-gray) mb-2">Alunos na Turma</h3>
+            <p className="text-4xl font-bold text-(--azul-escuro)">{alunos.length}</p>
           </div>
         </NavLink>
-        <NavLink to="/avisos" className="navlink">
-          <div className="cartao-resumo">
-            <h3>Novos Avisos</h3>
-            <p className="valor-resumo">3</p> {/* Valor fixo por enquanto */}
+        <NavLink to="/avisos" className="no-underline">
+          <div className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-[5px] border-l-(--orange-accent)">
+            <h3 className="text-base text-(--text-gray) mb-2">Novos Avisos</h3>
+            <p className="text-4xl font-bold text-(--azul-escuro)">3</p> {/* Valor fixo por enquanto */}
           </div>
         </NavLink>
-        <NavLink to="/mensagens" className="navlink">
-          <div className="cartao-resumo">
-            <h3>Mensagens</h3>
-            <p className="valor-resumo">5 não lidas</p> {/* Valor fixo por enquanto */}
+        <NavLink to="/mensagens" className="no-underline">
+          <div className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-[5px] border-l-(--orange-accent)">
+            <h3 className="text-base text-(--text-gray) mb-2">Mensagens</h3>
+            <p className="text-4xl font-bold text-(--azul-escuro)">5 não lidas</p> {/* Valor fixo por enquanto */}
           </div>
         </NavLink>
       </section>
 
-      <main className="conteudo-principal">
-        <div className="conteudo-esquerda">
-          <NavLink to="/agenda" className="navlink">
+      <main className="flex gap-8">
+        <div className="flex-3 flex flex-col gap-8">
+          <NavLink to="/agenda" className="no-underline">
             <CardGrande titulo="Atividades do dia" atividades={atividadesDoDia} />
           </NavLink>
         </div>
-        <div className="conteudo-direita">
-          <div className="cartao">
-            <h2>Ações Rápidas</h2>
-            <div className="acoes-rapidas">
-              <NavLink to="/avisos" className="navlink">
+        <div className="flex-1">
+          <div className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] w-full">
+            <h2 className="mb-4 text-(--azul-escuro)">Ações Rápidas</h2>
+            <div className="flex flex-col gap-4">
+              <NavLink to="/avisos" className="no-underline">
                 <BotaoLaranja mensagem="Criar aviso" icone={faPlus} />
               </NavLink>
-              <NavLink to="/alunos" className="navlink">
+              <NavLink to="/alunos" className="no-underline">
                 <BotaoLaranja mensagem="Gerenciar Alunos" icone={faUsers} />
               </NavLink>
-              <NavLink to="/mensagens" className="navlink">
+              <NavLink to="/mensagens" className="no-underline">
                 <BotaoLaranja mensagem="Ler Mensagens" icone={faEnvelopeOpenText} />
               </NavLink>
             </div>

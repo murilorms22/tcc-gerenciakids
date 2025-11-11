@@ -1,13 +1,12 @@
 import React from 'react';
-import '../Dashboard/Dashboard.css'; // Pode criar um CSS próprio depois
 import CardAtividades from '../CardAtividades/CardAtividades';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 
 function CardGrande({ titulo, atividades = [] }) {
   return (
-    <div className="cartao">
-      <h2>{titulo}</h2>
-      <ul className="lista-atividades">
+    <div className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] w-full">
+      <h2 className="mb-4 text-(--azul-escuro)">{titulo}</h2>
+      <ul className="list-none p-0 m-0">
         {atividades.length > 0 ? (
           atividades.map((atividade) => (
             <CardAtividades

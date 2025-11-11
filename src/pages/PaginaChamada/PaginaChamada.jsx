@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSort, faSortUp, faSortDown, faSave } from '@fortawesome/free-solid-svg-icons';
-import './PaginaChamada.css'; // Usaremos um novo CSS
 
 function PaginaChamada() {
   // --- ESTADOS ---
@@ -25,7 +24,7 @@ function PaginaChamada() {
     const buscarAlunos = async () => {
       try {
         // Busca os alunos da turma 202, como antes
-        const response = await fetch('https://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos?id_turma=202');
+        const response = await fetch('http://localhost:3001/alunos?id_turma=202');
         if (!response.ok) throw new Error('Falha ao buscar a lista de alunos.');
         const data = await response.json();
         setAlunos(data);
@@ -93,7 +92,7 @@ function PaginaChamada() {
       const faltasAtuais = aluno.faltas || 0; // Garante que é um número
       
       // Usamos o método 'PATCH' para atualizar APENAS o campo de faltas
-      return fetch(`http://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos/${aluno.id}`, {
+      return fetch(`http://localhost:3001/alunos/${aluno.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -111,7 +110,7 @@ function PaginaChamada() {
       alert('Chamada salva com sucesso!');
       
       // Opcional: Atualizar a lista de alunos local com as novas contagens de faltas
-      const response = await fetch('http://my-json-server.typicode.com/murilorms22/tcc-gerenciakids/alunos?id_turma=202');
+      const response = await fetch('http://localhost:3001/alunos?id_turma=202');
       const data = await response.json();
       setAlunos(data);
       
@@ -131,46 +130,47 @@ function PaginaChamada() {
 
   // --- RENDERIZAÇÃO (JSX) ---
   return (
-    <div className="pagina-chamada-container">
-      <header className="pagina-chamada-cabecalho">
-        <h1>Registro de Chamada</h1>
-        <p>Marque os alunos que FALTARAM hoje. Todos os outros serão considerados presentes.</p>
+    <div className="w-full p-8">
+      <header className="mb-6">
+        <h1 className="text-(--azul-escuro) text-4xl font-bold">Registro de Chamada</h1>
+        <p className="text-lg text-(--text-gray) mt-1">Marque os alunos que FALTARAM hoje. Todos os outros serão considerados presentes.</p>
       </header>
       
-      <div className="controles-container">
-        <div className="campo-pesquisa">
-          <FontAwesomeIcon icon={faSearch} className="icone-pesquisa" />
+      <div className="mb-6">
+        <div className="relative">
+          <FontAwesomeIcon icon={faSearch} className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-gray)" />
           <input
             type="text"
             placeholder="Pesquisar por nome..."
             value={termoPesquisa}
             onChange={(e) => setTermoPesquisa(e.target.value)}
+            className="w-full py-3 px-4 pl-10 rounded-lg border border-(--border-gray) text-base"
           />
         </div>
       </div>
 
-      <div className="tabela-chamada-card">
-        <div className="tabela-cabecalho">
-          <div className="coluna-nome">Nome Completo</div>
-          <div className="coluna-numFaltas">Número de faltas</div>
-          <div className="coluna-status">Faltou?</div>
+      <div className="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div className="grid grid-cols-[2fr_1fr_1fr] items-center py-5 px-6 gap-4 bg-(--bg-gray-light) font-bold text-(--text-gray) border-b border-(--border-gray)">
+          <div>Nome Completo</div>
+          <div className="text-center">Número de faltas</div>
+          <div className="text-center">Faltou?</div>
         </div>
 
-        <div className="tabela-corpo">
+        <div>
           {alunosFiltrados.length > 0 ? (
             alunosFiltrados.map(aluno => (
-              <div className="aluno-linha" key={aluno.id}>
-                <div className="coluna-nome">
-                  <img src={aluno.foto_perfil_url} alt="" className="aluno-avatar" />
+              <div className="grid grid-cols-[2fr_1fr_1fr] items-center py-5 px-6 gap-4 border-b border-(--border-light) last:border-b-0" key={aluno.id}>
+                <div className="font-bold text-(--azul-escuro) flex items-center gap-4">
+                  <img src={aluno.foto_perfil_url} alt="" className="w-10 h-10 rounded-full object-cover" />
                   <span>{aluno.nome_completo}</span>
                 </div>
-                <div className='coluna-numFaltas'>
-                  <span>{aluno.faltas || 0}</span>
+                <div className='text-center'>
+                  <span className="bg-(--bg-gray-light) text-(--azul-escuro) py-1 px-3 rounded-lg font-bold">{aluno.faltas || 0}</span>
                 </div>
-                <div className="coluna-status">
+                <div className="text-center">
                   <input
                     type="checkbox"
-                    className="checkbox-falta"
+                    className="scale-150 cursor-pointer"
                     // O checkbox é marcado SE o ID do aluno ESTIVER no Set 'listaDeAusentes'
                     checked={listaDeAusentes.has(aluno.id)}
                     // Ao clicar, chama a função de toggle
@@ -180,14 +180,14 @@ function PaginaChamada() {
               </div>
             ))
           ) : (
-            <div className="linha-sem-resultados">Nenhum aluno encontrado.</div>
+            <div className="p-8 text-center text-(--text-gray)">Nenhum aluno encontrado.</div>
           )}
         </div>
       </div>
 
-      <div className="rodape-chamada">
+      <div className="mt-8 flex justify-end">
         <button 
-          className="botao-salvar-chamada" 
+          className="bg-(--success-green) text-white border-none py-3 px-6 rounded-lg text-lg font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--success-green-hover) disabled:bg-(--gray-disabled) disabled:cursor-not-allowed" 
           onClick={handleSubmitChamada}
           disabled={salvando} // Desabilita o botão enquanto salva
         >
