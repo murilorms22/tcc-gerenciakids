@@ -1,35 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faSort, faSortUp, faSortDown, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faSave } from '@fortawesome/free-solid-svg-icons';
+import axiosClient from '../../utils/axios-client'; // 1. Importando o Axios Configurado
 
 function PaginaChamada() {
   // --- ESTADOS ---
-  const [alunos, setAlunos] = useState([]); // Lista original da API
-  const [alunosFiltrados, setAlunosFiltrados] = useState([]); // Lista para exibição
+  const [alunos, setAlunos] = useState([]); 
+  const [alunosFiltrados, setAlunosFiltrados] = useState([]); 
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
   
-  // Estado de pesquisa e ordenação (simplificado)
   const [termoPesquisa, setTermoPesquisa] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: 'nome_completo', direction: 'ascending' });
+  // Ordenação fixa por nome para simplificar, mas pode manter sua config se quiser
+  const [sortConfig] = useState({ key: 'nome_completo', direction: 'ascending' });
 
-  // COMENTÁRIO: Este é o novo estado crucial.
-  // Vamos usar um 'Set' para armazenar os IDs dos alunos que FALTARAM.
-  // Um Set é como um array, mas otimizado para adicionar/remover/verificar itens únicos.
+  // Set para IDs dos alunos ausentes
   const [listaDeAusentes, setListaDeAusentes] = useState(new Set());
-  const [salvando, setSalvando] = useState(false); // Estado de loading para o botão salvar
+  const [salvando, setSalvando] = useState(false);
 
-  // --- BUSCA DE DADOS (useEffect 1) ---
+  // --- BUSCA DE DADOS (Adaptado para DummyJSON) ---
   useEffect(() => {
     const buscarAlunos = async () => {
       try {
-        // Busca os alunos da turma 202, como antes
-        const response = await fetch('http://localhost:3001/alunos?id_turma=202');
-        if (!response.ok) throw new Error('Falha ao buscar a lista de alunos.');
-        const data = await response.json();
-        setAlunos(data);
+        // GET /users (Simulando a turma)
+        const response = await axiosClient.get('/users');
+        
+        // Mapeamento de dados: API Inglês -> Seu código Português
+        const dadosAdaptados = response.data.users.map(user => ({
+          id: user.id,
+          nome_completo: `${user.firstName} ${user.lastName}`,
+          foto_perfil_url: user.image,
+          // Como a API não tem faltas, inventamos um número baseado na idade para não ficar tudo zero
+          faltas: Math.floor(user.age / 10) 
+        }));
+
+        setAlunos(dadosAdaptados);
       } catch (err) {
-        setErro(err.message);
+        setErro('Falha ao buscar a lista de alunos da API.');
+        console.error(err);
       } finally {
         setCarregando(false);
       }
@@ -37,107 +45,91 @@ function PaginaChamada() {
     buscarAlunos();
   }, []);
 
-  // --- LÓGICA DE FILTRO E ORDENAÇÃO (useEffect 2) ---
+  // --- LÓGICA DE FILTRO E ORDENAÇÃO ---
   useEffect(() => {
     let alunosProcessados = [...alunos];
 
-    // 1. Filtro por pesquisa (mantido, é útil)
     if (termoPesquisa) {
       alunosProcessados = alunosProcessados.filter(aluno =>
         aluno.nome_completo.toLowerCase().includes(termoPesquisa.toLowerCase())
       );
     }
 
-    // 2. Filtro de alergia foi REMOVIDO
-    
-    // 3. Ordenação por nome (mantida)
     alunosProcessados.sort((a, b) => {
       let valA = a.nome_completo.toLowerCase();
       let valB = b.nome_completo.toLowerCase();
-      
       if (valA < valB) return sortConfig.direction === 'ascending' ? -1 : 1;
       if (valA > valB) return sortConfig.direction === 'ascending' ? 1 : -1;
       return 0;
     });
 
     setAlunosFiltrados(alunosProcessados);
+  }, [alunos, termoPesquisa, sortConfig]);
 
-  }, [alunos, termoPesquisa, sortConfig]); // Dependências atualizadas
-
-  // --- NOVAS FUNÇÕES DE EVENTO ---
+  // --- EVENTOS ---
   
-  // Função para marcar/desmarcar um aluno como ausente
   const handleAusenciaToggle = (alunoId) => {
-    // Criamos uma cópia do Set para atualizar o estado de forma imutável
     setListaDeAusentes(prevAusentes => {
       const novosAusentes = new Set(prevAusentes);
       if (novosAusentes.has(alunoId)) {
-        novosAusentes.delete(alunoId); // Se já estava na lista, remove (presente)
+        novosAusentes.delete(alunoId);
       } else {
-        novosAusentes.add(alunoId); // Se não estava, adiciona (ausente)
+        novosAusentes.add(alunoId);
       }
       return novosAusentes;
     });
   };
 
-  // Função para salvar a chamada no "banco de dados"
   const handleSubmitChamada = async () => {
     setSalvando(true);
     
-    // 1. Filtra a lista de alunos originais para encontrar os objetos dos ausentes
-    const alunosParaAtualizar = alunos.filter(aluno => listaDeAusentes.has(aluno.id));
+    // Filtra quem faltou para enviar atualização
+    const alunosAusentes = alunos.filter(aluno => listaDeAusentes.has(aluno.id));
     
-    // 2. Cria um array de "promessas" de atualização
-    const promises = alunosParaAtualizar.map(aluno => {
-      const faltasAtuais = aluno.faltas || 0; // Garante que é um número
-      
-      // Usamos o método 'PATCH' para atualizar APENAS o campo de faltas
-      return fetch(`http://localhost:3001/alunos/${aluno.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          faltas: faltasAtuais + 1
-        })
+    // Vamos simular a atualização usando axiosClient.put
+    // A API DummyJSON aceita PUT em /users/:id, mas não salva de verdade (simulação)
+    const promises = alunosAusentes.map(aluno => {
+      return axiosClient.put(`/users/${aluno.id}`, {
+         // Enviamos um dado qualquer só para constar na requisição PUT
+         maidenName: 'Faltou' 
       });
     });
 
     try {
-      // 3. Executa todas as atualizações em paralelo e espera terminarem
       await Promise.all(promises);
       
-      alert('Chamada salva com sucesso!');
+      // Atualização Otimista (Visual):
+      // Aumentamos +1 na falta localmente para parecer real
+      const novaListaAlunos = alunos.map(aluno => {
+          if (listaDeAusentes.has(aluno.id)) {
+              return { ...aluno, faltas: aluno.faltas + 1 };
+          }
+          return aluno;
+      });
       
-      // Opcional: Atualizar a lista de alunos local com as novas contagens de faltas
-      const response = await fetch('http://localhost:3001/alunos?id_turma=202');
-      const data = await response.json();
-      setAlunos(data);
-      
-      setListaDeAusentes(new Set()); // Limpa a seleção
+      setAlunos(novaListaAlunos);
+      alert(`${promises.length} faltas registradas com sucesso!`);
+      setListaDeAusentes(new Set()); // Limpa seleção
       
     } catch (err) {
-      console.error('Erro ao salvar chamada:', err);
-      alert('Houve um erro ao salvar a chamada.');
+      console.error('Erro ao salvar:', err);
+      alert('Erro ao registrar chamada.');
     } finally {
       setSalvando(false);
     }
   };
 
+  if (carregando) return <h1 className="p-8 text-center text-(--text-gray)">Carregando lista de chamada...</h1>;
+  if (erro) return <h1 className="p-8 text-center text-red-500">Erro: {erro}</h1>;
 
-  if (carregando) return <h1>Carregando lista de alunos...</h1>;
-  if (erro) return <h1>Erro: {erro}</h1>;
-
-  // --- RENDERIZAÇÃO (JSX) ---
   return (
     <div className="w-full p-8">
       <header className="mb-6">
         <h1 className="text-(--azul-escuro) text-4xl font-bold">Registro de Chamada</h1>
-        <p className="text-lg text-(--text-gray) mt-1">Marque os alunos que FALTARAM hoje. Todos os outros serão considerados presentes.</p>
+        <p className="text-lg text-(--text-gray) mt-1">Marque os alunos que FALTARAM hoje.</p>
       </header>
       
-      <div className="mb-6">
-        <div className="relative">
+      <div className="mb-6 relative">
           <FontAwesomeIcon icon={faSearch} className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-gray)" />
           <input
             type="text"
@@ -146,14 +138,13 @@ function PaginaChamada() {
             onChange={(e) => setTermoPesquisa(e.target.value)}
             className="w-full py-3 px-4 pl-10 rounded-lg border border-(--border-gray) text-base"
           />
-        </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden">
         <div className="grid grid-cols-[2fr_1fr_1fr] items-center py-5 px-6 gap-4 bg-(--bg-gray-light) font-bold text-(--text-gray) border-b border-(--border-gray)">
           <div>Nome Completo</div>
-          <div className="text-center">Número de faltas</div>
-          <div className="text-center">Faltou?</div>
+          <div className="text-center">Faltas Acumuladas</div>
+          <div className="text-center">Ausente Hoje?</div>
         </div>
 
         <div>
@@ -161,19 +152,17 @@ function PaginaChamada() {
             alunosFiltrados.map(aluno => (
               <div className="grid grid-cols-[2fr_1fr_1fr] items-center py-5 px-6 gap-4 border-b border-(--border-light) last:border-b-0" key={aluno.id}>
                 <div className="font-bold text-(--azul-escuro) flex items-center gap-4">
-                  <img src={aluno.foto_perfil_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+                  <img src={aluno.foto_perfil_url} alt="" className="w-10 h-10 rounded-full object-cover border border-gray-200" />
                   <span>{aluno.nome_completo}</span>
                 </div>
                 <div className='text-center'>
-                  <span className="bg-(--bg-gray-light) text-(--azul-escuro) py-1 px-3 rounded-lg font-bold">{aluno.faltas || 0}</span>
+                  <span className="bg-(--bg-gray-light) text-(--azul-escuro) py-1 px-3 rounded-lg font-bold">{aluno.faltas}</span>
                 </div>
-                <div className="text-center">
+                <div className="text-center flex justify-center">
                   <input
                     type="checkbox"
-                    className="scale-150 cursor-pointer"
-                    // O checkbox é marcado SE o ID do aluno ESTIVER no Set 'listaDeAusentes'
+                    className="w-6 h-6 cursor-pointer accent-(--orange)"
                     checked={listaDeAusentes.has(aluno.id)}
-                    // Ao clicar, chama a função de toggle
                     onChange={() => handleAusenciaToggle(aluno.id)} 
                   />
                 </div>
@@ -187,9 +176,9 @@ function PaginaChamada() {
 
       <div className="mt-8 flex justify-end">
         <button 
-          className="bg-(--success-green) text-white border-none py-3 px-6 rounded-lg text-lg font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--success-green-hover) disabled:bg-(--gray-disabled) disabled:cursor-not-allowed" 
+          className="bg-(--success-green) text-white border-none py-3 px-6 rounded-lg text-lg font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--success-green-hover) disabled:bg-gray-400 disabled:cursor-not-allowed" 
           onClick={handleSubmitChamada}
-          disabled={salvando} // Desabilita o botão enquanto salva
+          disabled={salvando}
         >
           <FontAwesomeIcon icon={faSave} />
           <span>{salvando ? 'Salvando...' : 'Salvar Chamada'}</span>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faExclamationTriangle, faPlus, faSearch, faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faExclamationTriangle, faPlus, faSearch, faSort, faSortUp, faSortDown, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import axiosClient from '../../utils/axios-client'; // 1. Importamos o cliente configurado
 
 function calcularIdade(dataNascimento) {
   const hoje = new Date();
@@ -23,15 +24,28 @@ function PaginaAlunos() {
   const [mostrarApenasAlergicos, setMostrarApenasAlergicos] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: 'nome_completo', direction: 'ascending' });
 
+  // 2. useEffect alterado para usar Axios e DummyJSON
   useEffect(() => {
     const buscarAlunos = async () => {
       try {
-        const response = await fetch('http://localhost:3001/alunos?id_turma=202');
-        if (!response.ok) throw new Error('Falha ao buscar a lista de alunos.');
-        const data = await response.json();
-        setAlunos(data);
+        // Buscando da API pública simulada
+        const response = await axiosClient.get('/users');
+        
+        // 3. Mapeamento de Dados (O Pulo do Gato)
+        // Transformamos os dados da DummyJSON para o formato que teu front já usa
+        const dadosAdaptados = response.data.users.map(user => ({
+          id: user.id,
+          nome_completo: `${user.firstName} ${user.lastName}`,
+          data_nascimento: user.birthDate, // A API já retorna YYYY-MM-DD
+          // Como a API não tem alergias, criamos uma simulação baseada no ID para testar teu filtro
+          alergias: user.id % 3 === 0 ? 'Glúten' : (user.id % 5 === 0 ? 'Amendoim' : 'Nenhuma'),
+          foto: user.image // Extra: A API traz foto, podemos usar se quiser
+        }));
+
+        setAlunos(dadosAdaptados);
       } catch (err) {
-        setErro(err.message);
+        console.error(err);
+        setErro('Falha ao buscar a lista de alunos da API.');
       } finally {
         setCarregando(false);
       }
@@ -39,6 +53,7 @@ function PaginaAlunos() {
     buscarAlunos();
   }, []);
 
+  // O restante do teu código (filtros e sorting) permanece INTACTO pois os dados já estão no formato certo
   useEffect(() => {
     let alunosProcessados = [...alunos];
 
@@ -115,13 +130,22 @@ function PaginaAlunos() {
     return faSortDown;
   }
 
-  if (carregando) return <h1>Carregando lista de alunos...</h1>;
-  if (erro) return <h1>Erro: {erro}</h1>;
+  if (carregando) return <h1 className="p-8 text-center text-(--text-gray)">Carregando lista de alunos...</h1>;
+  if (erro) return <h1 className="p-8 text-center text-red-500">Erro: {erro}</h1>;
 
   return (
     <div className="w-full p-8">
       <header className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-bold text-(--azul-escuro)">Gerenciamento de Alunos</h1>
+        <div className='flex flex-row gap-4'>
+          <Link 
+            to="/" 
+            className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-sm text-(--azul-escuro) hover:bg-(--orange) hover:text-white transition-colors duration-200"
+            title="Voltar para lista"
+          >
+          <FontAwesomeIcon icon={faArrowLeft} />
+          </Link>
+          <h1 className="text-4xl font-bold text-(--azul-escuro)">Gerenciamento de Alunos</h1>
+        </div>
         <NavLink to="/chamada" className="no-underline">
           <button className="flex items-center justify-center gap-3 p-4 bg-(--orange) text-white border-none rounded-lg text-base cursor-pointer transition-colors duration-200 ml-10 hover:bg-(--light-orange)">
             <FontAwesomeIcon icon={faPlus} />
@@ -170,7 +194,10 @@ function PaginaAlunos() {
           {alunosFiltrados.length > 0 ? (
             alunosFiltrados.map(aluno => (
               <div className="grid grid-cols-[3fr_1fr_2fr_1fr] items-center p-4 px-6 gap-4 border-b border-(--border-light) last:border-b-0" key={aluno.id}>
-                <div className="font-bold text-(--azul-escuro)">{aluno.nome_completo}</div>
+                <div className="font-bold text-(--azul-escuro) flex items-center gap-3">
+                    <img src={aluno.foto} alt="" className="w-8 h-8 rounded-full object-cover border border-gray-200" />
+                    {aluno.nome_completo}
+                </div>
                 <div>{calcularIdade(aluno.data_nascimento)} anos</div>
                 <div>
                   {aluno.alergias && aluno.alergias.toLowerCase() !== 'nenhuma' && (

@@ -1,14 +1,44 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import axiosClient from '../utils/axios-client';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [isAutenticado, setIsAutenticado] = useState(false);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("USER")) || null);
+  const [token, setToken] = useState(localStorage.getItem("ACCESS_TOKEN") || null);
 
-  const login = () => setIsAutenticado(true);
+  const login = async (username, password) => {
+    try {
+      const response = await axiosClient.post("/auth/login", {
+        username,
+        password,
+      });
+
+      const { accessToken, ...userData } = response.data;
+
+      setToken(accessToken);
+      setUser(userData);
+      localStorage.setItem("ACCESS_TOKEN", accessToken);
+      localStorage.setItem("USER", JSON.stringify(userData));
+
+      return true;
+    } catch (error) {
+      console.error("Erro ao logar:", error);
+      return false;
+    }
+  };
+
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+    localStorage.removeItem("ACCESS_TOKEN");
+    localStorage.removeItem("USER");
+  };
+
+  const isAutenticado = !!token;
 
   return (
-    <AuthContext.Provider value={{ isAutenticado, login }}>
+    <AuthContext.Provider value={{ isAutenticado, user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
