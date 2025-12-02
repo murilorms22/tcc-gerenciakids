@@ -10,14 +10,12 @@ export function PaginaLogin() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // 2. Estados para capturar os dados
   const [usuarioInput, setUsuarioInput] = useState('');
   const [senhaInput, setSenhaInput] = useState('');
   const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
 
   const clickLogin = async () => {
-    // Validação simples
     if (!usuarioInput || !senhaInput) {
       setErro('Preencha todos os campos.');
       return;
@@ -26,7 +24,6 @@ export function PaginaLogin() {
     setErro('');
     setLoading(true);
 
-    // 3. Chama a função do AuthContext passando os dados reais
     const sucesso = await login(usuarioInput, senhaInput);
 
     if (sucesso) {
@@ -40,7 +37,7 @@ export function PaginaLogin() {
 
   return (
     <>
-    <div className='flex flex-col m-auto h-screen items-center'>
+    <div className='flex flex-col m-auto h-screen items-center'>/
       <img src={logo} alt="" className='fixed top-1/2 -translate-y-[450%] w-64' />
       <div className='flex m-auto border-2 border-(--orange) rounded-[10px] shadow-[10px_10px_30px_rgba(0,0,0,0.2)]'>
         <div className='p-[70px] text-(--azul-escuro) h-[500px] bg-white rounded-l-[10px] flex flex-col justify-center'>

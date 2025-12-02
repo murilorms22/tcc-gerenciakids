@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faExclamationTriangle, faPlus, faSearch, faSort, faSortUp, faSortDown, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import axiosClient from '../../utils/axios-client'; // 1. Importamos o cliente configurado
+import axiosClient from '../../utils/axios-client';
 
 function calcularIdade(dataNascimento) {
   const hoje = new Date();
@@ -24,22 +24,18 @@ function PaginaAlunos() {
   const [mostrarApenasAlergicos, setMostrarApenasAlergicos] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: 'nome_completo', direction: 'ascending' });
 
-  // 2. useEffect alterado para usar Axios e DummyJSON
   useEffect(() => {
     const buscarAlunos = async () => {
       try {
-        // Buscando da API pública simulada
         const response = await axiosClient.get('/users');
         
-        // 3. Mapeamento de Dados (O Pulo do Gato)
-        // Transformamos os dados da DummyJSON para o formato que teu front já usa
         const dadosAdaptados = response.data.users.map(user => ({
           id: user.id,
           nome_completo: `${user.firstName} ${user.lastName}`,
-          data_nascimento: user.birthDate, // A API já retorna YYYY-MM-DD
+          data_nascimento: user.birthDate,  
           // Como a API não tem alergias, criamos uma simulação baseada no ID para testar teu filtro
           alergias: user.id % 3 === 0 ? 'Glúten' : (user.id % 5 === 0 ? 'Amendoim' : 'Nenhuma'),
-          foto: user.image // Extra: A API traz foto, podemos usar se quiser
+          foto: user.image
         }));
 
         setAlunos(dadosAdaptados);
@@ -53,7 +49,6 @@ function PaginaAlunos() {
     buscarAlunos();
   }, []);
 
-  // O restante do teu código (filtros e sorting) permanece INTACTO pois os dados já estão no formato certo
   useEffect(() => {
     let alunosProcessados = [...alunos];
 

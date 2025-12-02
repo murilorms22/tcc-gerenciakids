@@ -12,17 +12,15 @@ function Dashboard() {
   const { user } = useAuth(); 
   
   const [alunos, setAlunos] = useState([]);
-  const [atividades, setAtividades] = useState([]); // Novo estado para as atividades
+  const [atividades, setAtividades] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
 
-  // Turma simulada
   const turma = { nome_turma: "Maternal II" };
 
   useEffect(() => {
     const buscarDados = async () => {
       try {
-        // Usamos Promise.all para buscar Alunos E Atividades (Todos) em paralelo
         const [alunosResponse, todosResponse] = await Promise.all([
           axiosClient.get('/users'),
           axiosClient.get('/todos')
@@ -30,15 +28,10 @@ function Dashboard() {
         
         setAlunos(alunosResponse.data.users);
 
-        // --- ADAPTAÇÃO DAS ATIVIDADES ---
-        // 1. Pegamos apenas as 3 primeiras tarefas
-        // 2. Mapeamos para o formato que o CardGrande exige (titulo, horario, sala)
         const atividadesRecentes = todosResponse.data.todos.slice(0, 3).map((todo, index) => ({
             id: todo.id,
             titulo: todo.todo,
-            // Simulamos horários sequenciais (8h, 10h, 13h...)
             horario: `${8 + (index * 2)}h00`, 
-            // Simulamos uma sala aleatória entre 1 e 5
             numeroSala: Math.floor(Math.random() * 5) + 1 
         }));
 

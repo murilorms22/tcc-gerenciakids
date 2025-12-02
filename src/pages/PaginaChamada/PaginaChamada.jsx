@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSave } from '@fortawesome/free-solid-svg-icons';
-import axiosClient from '../../utils/axios-client'; // 1. Importando o Axios Configurado
+import axiosClient from '../../utils/axios-client';
 
 function PaginaChamada() {
   // --- ESTADOS ---
@@ -11,26 +11,20 @@ function PaginaChamada() {
   const [erro, setErro] = useState(null);
   
   const [termoPesquisa, setTermoPesquisa] = useState('');
-  // Ordenação fixa por nome para simplificar, mas pode manter sua config se quiser
   const [sortConfig] = useState({ key: 'nome_completo', direction: 'ascending' });
 
-  // Set para IDs dos alunos ausentes
   const [listaDeAusentes, setListaDeAusentes] = useState(new Set());
   const [salvando, setSalvando] = useState(false);
 
-  // --- BUSCA DE DADOS (Adaptado para DummyJSON) ---
   useEffect(() => {
     const buscarAlunos = async () => {
       try {
-        // GET /users (Simulando a turma)
         const response = await axiosClient.get('/users');
         
-        // Mapeamento de dados: API Inglês -> Seu código Português
         const dadosAdaptados = response.data.users.map(user => ({
           id: user.id,
           nome_completo: `${user.firstName} ${user.lastName}`,
           foto_perfil_url: user.image,
-          // Como a API não tem faltas, inventamos um número baseado na idade para não ficar tudo zero
           faltas: Math.floor(user.age / 10) 
         }));
 
@@ -45,7 +39,6 @@ function PaginaChamada() {
     buscarAlunos();
   }, []);
 
-  // --- LÓGICA DE FILTRO E ORDENAÇÃO ---
   useEffect(() => {
     let alunosProcessados = [...alunos];
 
@@ -83,14 +76,10 @@ function PaginaChamada() {
   const handleSubmitChamada = async () => {
     setSalvando(true);
     
-    // Filtra quem faltou para enviar atualização
     const alunosAusentes = alunos.filter(aluno => listaDeAusentes.has(aluno.id));
     
-    // Vamos simular a atualização usando axiosClient.put
-    // A API DummyJSON aceita PUT em /users/:id, mas não salva de verdade (simulação)
     const promises = alunosAusentes.map(aluno => {
       return axiosClient.put(`/users/${aluno.id}`, {
-         // Enviamos um dado qualquer só para constar na requisição PUT
          maidenName: 'Faltou' 
       });
     });
@@ -98,8 +87,6 @@ function PaginaChamada() {
     try {
       await Promise.all(promises);
       
-      // Atualização Otimista (Visual):
-      // Aumentamos +1 na falta localmente para parecer real
       const novaListaAlunos = alunos.map(aluno => {
           if (listaDeAusentes.has(aluno.id)) {
               return { ...aluno, faltas: aluno.faltas + 1 };
@@ -109,7 +96,7 @@ function PaginaChamada() {
       
       setAlunos(novaListaAlunos);
       alert(`${promises.length} faltas registradas com sucesso!`);
-      setListaDeAusentes(new Set()); // Limpa seleção
+      setListaDeAusentes(new Set());
       
     } catch (err) {
       console.error('Erro ao salvar:', err);
