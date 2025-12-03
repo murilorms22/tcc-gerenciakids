@@ -1,29 +1,27 @@
 import React from "react";
 import { render, screen, waitFor } from '@testing-library/react'; // MUDOU AQUI
 import { test, expect, vi } from "vitest";
-import PaginaAlunos from "../pages/PaginaAlunos/PaginaAlunos";
+import PaginaChamada from "../pages/PaginaChamada/PaginaChamada";
 import RouterStub from "./RouterStub";
 import { AuthProvider } from "../contexts/AuthContext";
 
 vi.mock('../utils/axios-client', () => ({
     default: {
         get: vi.fn(() => Promise.resolve({ 
-            data: { users: [
-                { id: 1, firstName: 'Teste', lastName: 'Silva', age: 5, image: '' }
-            ]} 
+            data: { users: [], todos: [] } 
         })),
+        put: vi.fn(),
     }
 }));
 
-test("PaginaAlunos: Deve renderizar o título da página", async () => {
+test("PaginaChamada: Deve renderizar o título da chamada", async () => {
     render(
         <AuthProvider>
-            <RouterStub component={<PaginaAlunos />} />
+            <RouterStub component={<PaginaChamada />} />
         </AuthProvider>
     );
 
-    // waitFor é necessário porque o useEffect é assíncrono
     await waitFor(() => {
-        expect(screen.getByText('Gerenciamento de Alunos')).toBeInTheDocument();
+        expect(screen.getByText('Registro de Chamada')).toBeInTheDocument();
     });
 });
