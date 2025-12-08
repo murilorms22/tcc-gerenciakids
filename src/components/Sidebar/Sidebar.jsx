@@ -1,10 +1,19 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faUserGroup, faBell, faEnvelope, faCalendar, faGear } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faUserGroup, faBell, faEnvelope, faCalendar, faGear, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../../contexts/AuthContext';
 import logo from '../../assets/logo.png';
 
 function Sidebar() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <div className="w-[400px] bg-(--orange) text-white flex flex-col">
       <div className="h-24 my-4 flex items-center justify-center text-2xl font-bold">
@@ -87,6 +96,16 @@ function Sidebar() {
           </li>
         </ul>
       </nav>
+      
+      <div className="p-4 border-t border-white/20">
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-3 p-4 rounded cursor-pointer transition-colors duration-200 text-white bg-transparent border-none hover:bg-white/10 w-full"
+        >
+          <FontAwesomeIcon icon={faSignOutAlt} />
+          <span>Sair</span>
+        </button>
+      </div>
     </div>
   );
 }
