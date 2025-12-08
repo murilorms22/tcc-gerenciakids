@@ -5,7 +5,6 @@ import axiosClient from '../../utils/axios-client';
 import { Link } from 'react-router-dom';
 
 function PaginaAgenda() {
-  // --- ESTADOS ---
   const [atividades, setAtividades] = useState([]);
   const [atividadesFiltradas, setAtividadesFiltradas] = useState([]);
   const [carregando, setCarregando] = useState(true);

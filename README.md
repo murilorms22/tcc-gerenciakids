@@ -53,6 +53,58 @@ Este projeto utilizará tecnologias modernas para construir uma aplicação robu
 
 ---
 
+## 🚀 Como Executar o Projeto
+
+### Pré-requisitos
+
+Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
+- [Git](https://git-scm.com)
+- [Node.js](https://nodejs.org/en/) (versão 16 ou superior)
+
+Além disso, é recomendável ter um editor de código como o [VSCode](https://code.visualstudio.com/).
+
+### 📦 Instalação
+
+```bash
+# Clone este repositório
+$ git clone https://github.com/murilorms22/tcc-gerenciakids.git
+
+# Acesse a pasta do projeto no terminal
+$ cd tcc-gerenciakids
+
+# Instale as dependências
+$ npm install
+```
+
+### ▶️ Executando o Projeto
+
+O projeto utiliza **json-server** para simular uma API REST e **Vite** para o front-end.
+
+**Você precisa executar DOIS comandos em terminais separados:**
+
+#### Terminal 1 - Servidor de API (json-server)
+```bash
+# Inicia o servidor JSON na porta 3001
+$ npm run server
+```
+
+#### Terminal 2 - Aplicação React (Vite)
+```bash
+# Inicia a aplicação React em modo de desenvolvimento
+$ npm run dev
+```
+
+### 🌐 Acessando a Aplicação
+
+Após executar os dois comandos acima:
+
+- **Front-end:** http://localhost:5173
+- **API (json-server):** http://localhost:3001
+
+> ⚠️ **Importante:** Ambos os servidores devem estar rodando simultaneamente para que a aplicação funcione corretamente.
+
+---
+
 ## 📈 Status do Projeto
 
 O projeto está atualmente **em fase de desenvolvimento**. Novas funcionalidades e melhorias estão sendo implementadas continuamente.
