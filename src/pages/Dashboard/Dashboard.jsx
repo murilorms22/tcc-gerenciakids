@@ -5,7 +5,7 @@ import BotaoLaranja from '../../components/BotaoLaranja/BotaoLaranja';
 import CardGrande from '../../components/CardGrande/CardGrande';
 import { NavLink } from 'react-router-dom';
 
-import axiosClient from '../../utils/axios-client';
+import dataService from '../../services/dataService';
 import { useAuth } from '../../contexts/AuthContext';
 
 function Dashboard() {
@@ -22,15 +22,15 @@ function Dashboard() {
     const buscarDados = async () => {
       try {
         const [alunosResponse, todosResponse] = await Promise.all([
-          axiosClient.get('/users'),
-          axiosClient.get('/todos')
+          dataService.getAlunos(),
+          dataService.getAtividades()
         ]);
         
         setAlunos(alunosResponse.data.users);
 
         const atividadesRecentes = todosResponse.data.todos.slice(0, 3).map((todo, index) => ({
             id: todo.id,
-            titulo: todo.todo,
+            titulo: todo.titulo,
             horario: `${8 + (index * 2)}h00`, 
             numeroSala: Math.floor(Math.random() * 5) + 1 
         }));

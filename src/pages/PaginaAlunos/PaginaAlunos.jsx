@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faExclamationTriangle, faPlus, faSearch, faSort, faSortUp, faSortDown, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import axiosClient from '../../utils/axios-client';
+import dataService from '../../services/dataService';
 
 function calcularIdade(dataNascimento) {
   const hoje = new Date();
@@ -27,21 +27,20 @@ function PaginaAlunos() {
   useEffect(() => {
     const buscarAlunos = async () => {
       try {
-        const response = await axiosClient.get('/users');
+        const response = await dataService.getAlunos();
         
         const dadosAdaptados = response.data.users.map(user => ({
           id: user.id,
-          nome_completo: `${user.firstName} ${user.lastName}`,
-          data_nascimento: user.birthDate,  
-          // Como a API não tem alergias, criamos uma simulação baseada no ID para testar teu filtro
-          alergias: user.id % 3 === 0 ? 'Glúten' : (user.id % 5 === 0 ? 'Amendoim' : 'Nenhuma'),
+          nome_completo: user.nome_completo,
+          data_nascimento: user.data_nascimento,
+          alergias: user.alergias,
           foto: user.image
         }));
 
         setAlunos(dadosAdaptados);
       } catch (err) {
         console.error(err);
-        setErro('Falha ao buscar a lista de alunos da API.');
+        setErro('Falha ao buscar a lista de alunos.');
       } finally {
         setCarregando(false);
       }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axiosClient from '../../utils/axios-client';
+import dataService from '../../services/dataService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faEnvelope, faPhone, faMapMarkerAlt, faHeartbeat, faRulerVertical, faWeight, faIdCard } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,7 +13,7 @@ function PaginaAlunosInfo() {
   useEffect(() => {
     const fetchAluno = async () => {
         try {
-            const response = await axiosClient.get(`/users/${id}`);
+            const response = await dataService.getAlunoById(id);
             setAluno(response.data);
         } catch (error) {
             console.error(error);

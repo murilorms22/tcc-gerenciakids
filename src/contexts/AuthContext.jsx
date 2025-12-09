@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axiosClient from '../utils/axios-client';
+import dataService from '../services/dataService';
 
 const AuthContext = createContext();
 
@@ -9,10 +9,7 @@ export function AuthProvider({ children }) {
 
   const login = async (username, password) => {
     try {
-      const response = await axiosClient.post("/auth/login", {
-        username,
-        password,
-      });
+      const response = await dataService.autenticar(username, password);
 
       const { accessToken, ...userData } = response.data;
 

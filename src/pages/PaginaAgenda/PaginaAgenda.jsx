@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSave, faCheckCircle, faTimesCircle, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import axiosClient from '../../utils/axios-client';
+import dataService from '../../services/dataService';
 import { Link } from 'react-router-dom';
 
 function PaginaAgenda() {
@@ -15,19 +15,19 @@ function PaginaAgenda() {
   useEffect(() => {
     const buscarAtividades = async () => {
       try {
-        const response = await axiosClient.get('/todos');
+        const response = await dataService.getAtividades();
         
         const dadosFormatados = response.data.todos.map(tarefa => ({
           id: tarefa.id,
-          descricao: tarefa.todo,
-          concluida: tarefa.completed,
+          descricao: tarefa.titulo,
+          concluida: tarefa.concluida,
           userId: tarefa.userId
         }));
 
         setAtividades(dadosFormatados);
         setAtividadesFiltradas(dadosFormatados);
       } catch (err) {
-        setErro('Falha ao carregar as atividades da API.');
+        setErro('Falha ao carregar as atividades.');
         console.error(err);
       } finally {
         setCarregando(false);

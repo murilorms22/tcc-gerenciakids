@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSave } from '@fortawesome/free-solid-svg-icons';
-import axiosClient from '../../utils/axios-client';
+import dataService from '../../services/dataService';
 
 function PaginaChamada() {
   // --- ESTADOS ---
@@ -32,18 +32,18 @@ function PaginaChamada() {
   useEffect(() => {
     const buscarAlunos = async () => {
       try {
-        const response = await axiosClient.get('/users');
+        const response = await dataService.getAlunos();
         
         const dadosAdaptados = response.data.users.map(user => ({
           id: user.id,
-          nome_completo: `${user.firstName} ${user.lastName}`,
+          nome_completo: user.nome_completo,
           foto_perfil_url: user.image,
-          faltas: Math.floor(user.age / 10) 
+          faltas: user.faltas
         }));
 
         setAlunos(dadosAdaptados);
       } catch (err) {
-        setErro('Falha ao buscar a lista de alunos da API.');
+        setErro('Falha ao buscar a lista de alunos.');
         console.error(err);
       } finally {
         setCarregando(false);
@@ -92,8 +92,8 @@ function PaginaChamada() {
     const alunosAusentes = alunos.filter(aluno => listaDeAusentes.has(aluno.id));
     
     const promises = alunosAusentes.map(aluno => {
-      return axiosClient.put(`/users/${aluno.id}`, {
-         maidenName: 'Faltou' 
+      return dataService.updateAluno(aluno.id, {
+        faltas: aluno.faltas + 1
       });
     });
 
