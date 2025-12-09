@@ -12,7 +12,7 @@
   },
   "usuarios": [
     {
-      "id": 1,
+      "id": "1",
       "username": "professor",
       "password": "123456",
       "firstName": "João",
@@ -21,7 +21,7 @@
       "role": "professor"
     },
     {
-      "id": 2,
+      "id": "2",
       "username": "admin",
       "password": "admin123",
       "firstName": "Admin",
@@ -141,33 +141,6 @@
   ],
   "alunos": [
     {
-      "id": "401",
-      "id_turma": 202,
-      "nome_completo": "Arthur Costa Lima",
-      "firstName": "Arthur",
-      "lastName": "Costa Lima",
-      "data_nascimento": "2022-05-15",
-      "birthDate": "2022-05-15",
-      "foto_perfil_url": "https://ui-avatars.com/api/?name=Arthur+Costa+Lima&background=FF7417&color=fff&size=150",
-      "image": "https://ui-avatars.com/api/?name=Arthur+Costa+Lima&background=FF7417&color=fff&size=150",
-      "alergias": "Nenhuma",
-      "observacoes": "Muito ativo e curioso. Adora brincar no pátio.",
-      "responsaveis_ids": [303, 304],
-      "faltas": 0,
-      "age": 2,
-      "gender": "male",
-      "email": "arthur@guardiao.com",
-      "phone": "+55 11 98765-4321",
-      "address": {
-        "address": "Rua das Flores, 123",
-        "city": "São Paulo",
-        "state": "SP"
-      },
-      "bloodGroup": "O+",
-      "height": 92,
-      "weight": 14
-    },
-    {
       "id": "402",
       "id_turma": 202,
       "nome_completo": "Helena Souza Martins",
@@ -178,8 +151,11 @@
       "foto_perfil_url": "https://ui-avatars.com/api/?name=Helena+Souza+Martins&background=FF6B9D&color=fff&size=150",
       "image": "https://ui-avatars.com/api/?name=Helena+Souza+Martins&background=FF6B9D&color=fff&size=150",
       "alergias": "Proteína do leite de vaca (APLV). Dieta restrita.",
-      "observacoes": "Precisa de ajuda para dormir, gosta de música de ninar.",
-      "responsaveis_ids": [301, 302],
+      "observacoes": "Precisa de ajuda para dormir, gosta de música de ninar. ",
+      "responsaveis_ids": [
+        301,
+        302
+      ],
       "faltas": 0,
       "age": 2,
       "gender": "female",
@@ -206,7 +182,10 @@
       "image": "https://ui-avatars.com/api/?name=Miguel+Almeida+Pereira&background=4ECDC4&color=fff&size=150",
       "alergias": "Alergia a picada de insetos.",
       "observacoes": "Comunicativo, gosta de conversar com os colegas e professores.",
-      "responsaveis_ids": [305, 306],
+      "responsaveis_ids": [
+        305,
+        306
+      ],
       "faltas": 0,
       "age": 2,
       "gender": "male",
@@ -233,7 +212,10 @@
       "image": "https://ui-avatars.com/api/?name=Alice+Oliveira+Ferreira&background=FFE66D&color=333&size=150",
       "alergias": "Glúten (sensibilidade).",
       "observacoes": "É um pouco tímida no início, mas se solta nas brincadeiras em grupo.",
-      "responsaveis_ids": [307, 308],
+      "responsaveis_ids": [
+        307,
+        308
+      ],
       "faltas": 2,
       "age": 2,
       "gender": "female",
@@ -260,7 +242,10 @@
       "image": "https://ui-avatars.com/api/?name=Bernardo+Santos+Gomes&background=95E1D3&color=fff&size=150",
       "alergias": "Nenhuma",
       "observacoes": "Adora desenhar e montar blocos lógicos. Concentrado.",
-      "responsaveis_ids": [309, 310],
+      "responsaveis_ids": [
+        309,
+        310
+      ],
       "faltas": 1,
       "age": 2,
       "gender": "male",
@@ -287,7 +272,10 @@
       "image": "https://ui-avatars.com/api/?name=Laura+Carvalho+Barros&background=C7CEEA&color=fff&size=150",
       "alergias": "Amendoim.",
       "observacoes": "Muito carinhosa com os colegas. Gosta de cuidar dos bonecos.",
-      "responsaveis_ids": [311, 312],
+      "responsaveis_ids": [
+        311,
+        312
+      ],
       "faltas": 0,
       "age": 3,
       "gender": "female",
@@ -314,7 +302,10 @@
       "image": "https://ui-avatars.com/api/?name=Davi+Rocha+Castro&background=52B788&color=fff&size=150",
       "alergias": "Corantes artificiais.",
       "observacoes": "Extremamente energético. Gosta de correr e brincar ao ar livre.",
-      "responsaveis_ids": [313, 314],
+      "responsaveis_ids": [
+        313,
+        314
+      ],
       "faltas": 0,
       "age": 2,
       "gender": "male",
@@ -341,7 +332,9 @@
       "image": "https://ui-avatars.com/api/?name=Sophia+Ribeiro&background=FFB4B4&color=fff&size=150",
       "alergias": "Nenhuma",
       "observacoes": "Muito observadora e tranquila. Gosta de ouvir histórias.",
-      "responsaveis_ids": [315],
+      "responsaveis_ids": [
+        315
+      ],
       "faltas": 0,
       "age": 2,
       "gender": "female",
@@ -368,7 +361,10 @@
       "image": "https://ui-avatars.com/api/?name=Theo+Azevedo+Dias&background=FFDAB9&color=333&size=150",
       "alergias": "Lactose (intolerância).",
       "observacoes": "Gosta de explorar os brinquedos sozinho. Começou a formar frases completas.",
-      "responsaveis_ids": [316, 317],
+      "responsaveis_ids": [
+        316,
+        317
+      ],
       "faltas": 0,
       "age": 2,
       "gender": "male",
@@ -395,7 +391,10 @@
       "image": "https://ui-avatars.com/api/?name=Isabella+Nunes+Mendes&background=FFADAD&color=fff&size=150",
       "alergias": "Nenhuma",
       "observacoes": "Adora dançar e cantar nas rodinhas de música.",
-      "responsaveis_ids": [318, 319],
+      "responsaveis_ids": [
+        318,
+        319
+      ],
       "faltas": 0,
       "age": 2,
       "gender": "female",
@@ -422,7 +421,9 @@
       "image": "https://ui-avatars.com/api/?name=Mateus+Pinto&background=A8DADC&color=fff&size=150",
       "alergias": "Poeira (rinite alérgica).",
       "observacoes": "Pode precisar de ajuda para limpar o nariz durante o dia.",
-      "responsaveis_ids": [320],
+      "responsaveis_ids": [
+        320
+      ],
       "faltas": 0,
       "age": 2,
       "gender": "male",
@@ -449,7 +450,10 @@
       "image": "https://ui-avatars.com/api/?name=L%C3%ADvia+Gomes+Santos&background=F08080&color=fff&size=150",
       "alergias": "Nenhuma",
       "observacoes": "Está em processo de desfralde.",
-      "responsaveis_ids": [309, 310],
+      "responsaveis_ids": [
+        309,
+        310
+      ],
       "faltas": 0,
       "age": 2,
       "gender": "female",
@@ -467,7 +471,7 @@
   ],
   "atividades": [
     {
-      "id": 1,
+      "id": "1",
       "titulo": "Roda de música",
       "descricao": "Atividade de musicalização",
       "concluida": false,
@@ -475,7 +479,7 @@
       "todo": "Roda de música"
     },
     {
-      "id": 2,
+      "id": "2",
       "titulo": "Parque",
       "descricao": "Brincadeira ao ar livre",
       "concluida": false,
@@ -483,7 +487,7 @@
       "todo": "Parque"
     },
     {
-      "id": 3,
+      "id": "3",
       "titulo": "Lanche da tarde",
       "descricao": "Distribuição de lanche",
       "concluida": true,
@@ -491,7 +495,7 @@
       "todo": "Lanche da tarde"
     },
     {
-      "id": 4,
+      "id": "4",
       "titulo": "Hora da leitura",
       "descricao": "Contação de histórias",
       "concluida": false,
@@ -499,7 +503,7 @@
       "todo": "Hora da leitura"
     },
     {
-      "id": 5,
+      "id": "5",
       "titulo": "Atividade de artes",
       "descricao": "Pintura com dedo",
       "concluida": false,

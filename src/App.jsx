@@ -9,6 +9,8 @@ import PaginaAlunosInfo from './pages/PaginaAlunosInfo/PaginaAlunosInfo';
 import { RotaProtegida } from './contexts/PrivateRoutes';
 import PaginaRegister from './pages/Register/PaginaRegister';
 import PaginaAgenda from './pages/PaginaAgenda/PaginaAgenda';
+import AdminAlunos from './pages/Admin/AdminAlunos';
+import FormularioAluno from './pages/Admin/FormularioAluno';
 
 const Avisos = () => <h1>Página de Avisos</h1>;
 const Mensagens = () => <h1>Página de Mensagens</h1>;
@@ -22,6 +24,9 @@ function App() {
       <Route path="/register" element={<PaginaRegister />} />
       <Route element={<RotaProtegida />}>
         <Route path="/" element={<AppLayout />}>
+          <Route path="/admin/alunos" element={<AdminAlunos />} />
+          <Route path="/admin/alunos/novo" element={<FormularioAluno />} />
+          <Route path="/admin/alunos/editar/:id" element={<FormularioAluno />} />
           <Route index element={<Dashboard />} />
           <Route path="alunos" element={<PaginaAlunos />} />
           <Route path="avisos" element={<Avisos />} />
