@@ -164,6 +164,7 @@ function PaginaAlunos() {
           <input
             type="checkbox"
             id="filtroAlergia"
+            className="custom-checkbox mr-2"
             checked={mostrarApenasAlergicos}
             onChange={(e) => setMostrarApenasAlergicos(e.target.checked)}
           />

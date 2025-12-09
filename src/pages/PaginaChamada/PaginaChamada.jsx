@@ -15,6 +15,19 @@ function PaginaChamada() {
 
   const [listaDeAusentes, setListaDeAusentes] = useState(new Set());
   const [salvando, setSalvando] = useState(false);
+  
+  // Total de aulas previstas para a turma
+  const [totalAulas] = useState(100);
+
+  // --- FUNÇÕES AUXILIARES ---
+  
+  // Calcula a frequência do aluno em porcentagem
+  const calcularFrequencia = (faltas) => {
+    if (totalAulas === 0) return 100;
+    const presencas = totalAulas - faltas;
+    const percentualFrequencia = (presencas / totalAulas) * 100;
+    return Math.max(0, percentualFrequencia).toFixed(1); // Garante que não seja negativo
+  };
 
   useEffect(() => {
     const buscarAlunos = async () => {
@@ -128,16 +141,21 @@ function PaginaChamada() {
       </div>
 
       <div className="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden">
-        <div className="grid grid-cols-[2fr_1fr_1fr] items-center py-5 px-6 gap-4 bg-(--bg-gray-light) font-bold text-(--text-gray) border-b border-(--border-gray)">
+        <div className="grid grid-cols-[2fr_1fr_1fr_1fr] items-center py-5 px-6 gap-4 bg-(--bg-gray-light) font-bold text-(--text-gray) border-b border-(--border-gray)">
           <div>Nome Completo</div>
           <div className="text-center">Faltas Acumuladas</div>
+          <div className="text-center">Frequência</div>
           <div className="text-center">Ausente Hoje?</div>
         </div>
 
         <div>
           {alunosFiltrados.length > 0 ? (
-            alunosFiltrados.map(aluno => (
-              <div className="grid grid-cols-[2fr_1fr_1fr] items-center py-5 px-6 gap-4 border-b border-(--border-light) last:border-b-0" key={aluno.id}>
+            alunosFiltrados.map(aluno => {
+              const frequencia = calcularFrequencia(aluno.faltas);
+              const frequenciaNum = parseFloat(frequencia);
+              
+              return (
+              <div className="grid grid-cols-[2fr_1fr_1fr_1fr] items-center py-5 px-6 gap-4 border-b border-(--border-light) last:border-b-0" key={aluno.id}>
                 <div className="font-bold text-(--azul-escuro) flex items-center gap-4">
                   <img src={aluno.foto_perfil_url} alt="" className="w-10 h-10 rounded-full object-cover border border-gray-200" />
                   <span>{aluno.nome_completo}</span>
@@ -145,16 +163,26 @@ function PaginaChamada() {
                 <div className='text-center'>
                   <span className="bg-(--bg-gray-light) text-(--azul-escuro) py-1 px-3 rounded-lg font-bold">{aluno.faltas}</span>
                 </div>
+                <div className='text-center'>
+                  <span className={`py-1 px-3 rounded-lg font-bold ${
+                    frequenciaNum >= 75 ? 'bg-green-100 text-green-700' : 
+                    frequenciaNum >= 50 ? 'bg-yellow-100 text-yellow-700' : 
+                    'bg-red-100 text-red-700'
+                  }`}>
+                    {frequencia}%
+                  </span>
+                </div>
                 <div className="text-center flex justify-center">
                   <input
                     type="checkbox"
-                    className="w-6 h-6 cursor-pointer accent-(--orange)"
+                    className="w-6 h-6 cursor-pointer custom-checkbox"
                     checked={listaDeAusentes.has(aluno.id)}
                     onChange={() => handleAusenciaToggle(aluno.id)} 
                   />
                 </div>
               </div>
-            ))
+              );
+            })
           ) : (
             <div className="p-8 text-center text-(--text-gray)">Nenhum aluno encontrado.</div>
           )}
