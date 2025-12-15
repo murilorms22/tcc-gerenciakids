@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSave } from '@fortawesome/free-solid-svg-icons';
 import dataService from '../services/dataService';
+import { alunoService } from '../services/alunoService';
 
 function PaginaChamada() {
-  // --- ESTADOS ---
   const [alunos, setAlunos] = useState([]); 
   const [alunosFiltrados, setAlunosFiltrados] = useState([]); 
   const [carregando, setCarregando] = useState(true);
@@ -16,17 +16,13 @@ function PaginaChamada() {
   const [listaDeAusentes, setListaDeAusentes] = useState(new Set());
   const [salvando, setSalvando] = useState(false);
   
-  // Total de aulas previstas para a turma
   const [totalAulas] = useState(100);
 
-  // --- FUNÇÕES AUXILIARES ---
-  
-  // Calcula a frequência do aluno em porcentagem
   const calcularFrequencia = (faltas) => {
     if (totalAulas === 0) return 100;
     const presencas = totalAulas - faltas;
     const percentualFrequencia = (presencas / totalAulas) * 100;
-    return Math.max(0, percentualFrequencia).toFixed(1); // Garante que não seja negativo
+    return Math.max(0, percentualFrequencia).toFixed(1);
   };
 
   useEffect(() => {
@@ -35,10 +31,8 @@ function PaginaChamada() {
         const response = await dataService.getAlunos();
         
         const dadosAdaptados = response.data.users.map(user => ({
-          id: user.id,
-          nome_completo: user.nome_completo,
-          foto_perfil_url: user.image,
-          faltas: user.faltas
+          ...user,
+          foto_perfil_url: user.image
         }));
 
         setAlunos(dadosAdaptados);
@@ -71,8 +65,6 @@ function PaginaChamada() {
 
     setAlunosFiltrados(alunosProcessados);
   }, [alunos, termoPesquisa, sortConfig]);
-
-  // --- EVENTOS ---
   
   const handleAusenciaToggle = (alunoId) => {
     setListaDeAusentes(prevAusentes => {
@@ -92,7 +84,8 @@ function PaginaChamada() {
     const alunosAusentes = alunos.filter(aluno => listaDeAusentes.has(aluno.id));
     
     const promises = alunosAusentes.map(aluno => {
-      return dataService.updateAluno(aluno.id, {
+      return alunoService.atualizar(aluno.id, {
+        ...aluno,
         faltas: aluno.faltas + 1
       });
     });

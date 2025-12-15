@@ -156,7 +156,7 @@
         301,
         302
       ],
-      "faltas": 0,
+      "faltas": 1,
       "age": 2,
       "gender": "female",
       "email": "helena@guardiao.com",
@@ -186,7 +186,7 @@
         305,
         306
       ],
-      "faltas": 0,
+      "faltas": 1,
       "age": 2,
       "gender": "male",
       "email": "miguel@guardiao.com",
@@ -216,7 +216,7 @@
         307,
         308
       ],
-      "faltas": 2,
+      "faltas": 3,
       "age": 2,
       "gender": "female",
       "email": "alice@guardiao.com",
@@ -246,7 +246,7 @@
         309,
         310
       ],
-      "faltas": 1,
+      "faltas": 2,
       "age": 2,
       "gender": "male",
       "email": "bernardo@guardiao.com",
@@ -276,7 +276,7 @@
         311,
         312
       ],
-      "faltas": 0,
+      "faltas": 1,
       "age": 3,
       "gender": "female",
       "email": "laura@guardiao.com",
@@ -306,7 +306,7 @@
         313,
         314
       ],
-      "faltas": 0,
+      "faltas": 1,
       "age": 2,
       "gender": "male",
       "email": "davi@guardiao.com",
@@ -335,7 +335,7 @@
       "responsaveis_ids": [
         315
       ],
-      "faltas": 0,
+      "faltas": 2,
       "age": 2,
       "gender": "female",
       "email": "sophia@guardiao.com",
@@ -365,7 +365,7 @@
         316,
         317
       ],
-      "faltas": 0,
+      "faltas": 1,
       "age": 2,
       "gender": "male",
       "email": "theo@guardiao.com",
@@ -395,7 +395,7 @@
         318,
         319
       ],
-      "faltas": 0,
+      "faltas": 3,
       "age": 2,
       "gender": "female",
       "email": "isabella@guardiao.com",
@@ -424,7 +424,7 @@
       "responsaveis_ids": [
         320
       ],
-      "faltas": 0,
+      "faltas": 2,
       "age": 2,
       "gender": "male",
       "email": "mateus@guardiao.com",
@@ -441,20 +441,20 @@
     {
       "id": "412",
       "id_turma": 202,
-      "nome_completo": "Lívia Gomes Santos",
+      "nome_completo": "Lívia Gomes Cruzeiro",
       "firstName": "Lívia",
-      "lastName": "Gomes Santos",
+      "lastName": "Gomes Cruzeiro",
       "data_nascimento": "2022-11-11",
       "birthDate": "2022-11-11",
-      "foto_perfil_url": "https://ui-avatars.com/api/?name=L%C3%ADvia+Gomes+Santos&background=F08080&color=fff&size=150",
-      "image": "https://ui-avatars.com/api/?name=L%C3%ADvia+Gomes+Santos&background=F08080&color=fff&size=150",
+      "foto_perfil_url": "https://ui-avatars.com/api/?name=L%C3%ADvia+Gomes+Cruzeiro&background=F08080&color=fff&size=150",
+      "image": "https://ui-avatars.com/api/?name=L%C3%ADvia+Gomes+Cruzeiro&background=F08080&color=fff&size=150",
       "alergias": "Nenhuma",
       "observacoes": "Está em processo de desfralde.",
       "responsaveis_ids": [
         309,
         310
       ],
-      "faltas": 0,
+      "faltas": 2,
       "age": 2,
       "gender": "female",
       "email": "livia@guardiao.com",
