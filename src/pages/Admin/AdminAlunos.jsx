@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { alunoService } from '../../services/alunoService';
-import { faPlus, faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash, faPen, faSync } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function AdminAlunos() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [alunos, setAlunos] = useState([]);
   const [alunoEditando, setAlunoEditando] = useState(null);
+  const [carregando, setCarregando] = useState(false);
   const [formData, setFormData] = useState({
     nome_completo: '',
     alergias: 'Nenhuma',
@@ -15,11 +19,19 @@ export default function AdminAlunos() {
 
   useEffect(() => {
     carregarAlunos();
-  }, []);
+  }, [location]); // Recarregar sempre que a rota mudar
 
   const carregarAlunos = async () => {
-    const dados = await alunoService.listar(202);
-    setAlunos(dados);
+    try {
+      setCarregando(true);
+      const dados = await alunoService.listar(202);
+      setAlunos(dados);
+    } catch (error) {
+      console.error('Erro ao carregar alunos:', error);
+      alert('Erro ao carregar alunos');
+    } finally {
+      setCarregando(false);
+    }
   };
 
   const handleNovoAluno = () => {
@@ -61,30 +73,37 @@ export default function AdminAlunos() {
 
     const alergiasValue = formData.temAlergia ? formData.alergiasTexto : 'Nenhuma';
 
-    if (alunoEditando === 'novo') {
-      const novoAluno = {
-        id: Date.now().toString(),
-        id_turma: 202,
-        nome_completo: formData.nome_completo,
-        firstName: formData.nome_completo.split(' ')[0],
-        lastName: formData.nome_completo.split(' ').slice(1).join(' '),
-        alergias: alergiasValue,
-        observacoes: '',
-        responsaveis_ids: [],
-        faltas: 0
-      };
-      setAlunos([...alunos, novoAluno]);
-    } else {
-      const alunoAtualizado = {
-        ...alunos.find(a => a.id === alunoEditando),
-        nome_completo: formData.nome_completo,
-        alergias: alergiasValue
-      };
-      await alunoService.atualizar(alunoEditando, alunoAtualizado);
-      setAlunos(alunos.map(a => a.id === alunoEditando ? alunoAtualizado : a));
+    try {
+      if (alunoEditando === 'novo') {
+        const novoAluno = {
+          id_turma: 202,
+          nome_completo: formData.nome_completo,
+          firstName: formData.nome_completo.split(' ')[0],
+          lastName: formData.nome_completo.split(' ').slice(1).join(' '),
+          alergias: alergiasValue,
+          observacoes: '',
+          responsaveis_ids: [],
+          faltas: 0
+        };
+        // Salvar no banco de dados
+        const alunoSalvo = await alunoService.criar(novoAluno);
+        // Adicionar ao estado com o ID gerado pelo servidor
+        setAlunos([...alunos, alunoSalvo]);
+      } else {
+        const alunoAtualizado = {
+          ...alunos.find(a => a.id === alunoEditando),
+          nome_completo: formData.nome_completo,
+          alergias: alergiasValue
+        };
+        await alunoService.atualizar(alunoEditando, alunoAtualizado);
+        setAlunos(alunos.map(a => a.id === alunoEditando ? alunoAtualizado : a));
+      }
+      handleCancelar();
+      alert('Aluno salvo com sucesso!');
+    } catch (error) {
+      console.error('Erro ao salvar aluno:', error);
+      alert('Erro ao salvar aluno: ' + error.message);
     }
-
-    handleCancelar();
   };
 
   const handleDelete = async (id) => {
@@ -121,10 +140,10 @@ export default function AdminAlunos() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-(--azul-escuro) mb-3">
+              <fieldset>
+                <legend className="block text-sm font-semibold text-(--azul-escuro) mb-3">
                   Possui Alergias?
-                </label>
+                </legend>
                 <div className="flex items-center gap-6">
                   <div className="flex items-center">
                     <input
@@ -153,7 +172,7 @@ export default function AdminAlunos() {
                     </label>
                   </div>
                 </div>
-              </div>
+              </fieldset>
 
               {formData.temAlergia && (
                 <div>
@@ -189,12 +208,21 @@ export default function AdminAlunos() {
           </div>
         ) : (
           <>
-            <button
-              onClick={handleNovoAluno}
-              className="bg-(--orange) text-white px-6 py-3 rounded-lg text-base font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--dark-orange) mb-6"
-            >
-              <FontAwesomeIcon icon={faPlus} /> Novo Aluno
-            </button>
+            <div className="flex gap-3 mb-6">
+              <button
+                onClick={handleNovoAluno}
+                className="bg-(--orange) text-white px-6 py-3 rounded-lg text-base font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--dark-orange)"
+              >
+                <FontAwesomeIcon icon={faPlus} /> Novo Aluno
+              </button>
+              <button
+                onClick={carregarAlunos}
+                disabled={carregando}
+                className="bg-(--azul-escuro) text-white px-6 py-3 rounded-lg text-base font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--azul-claro) disabled:opacity-50"
+              >
+                <FontAwesomeIcon icon={faSync} /> {carregando ? 'Carregando...' : 'Recarregar'}
+              </button>
+            </div>
 
             <div className="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden">
               <table className="w-full">

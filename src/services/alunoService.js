@@ -13,8 +13,15 @@ export const alunoService = {
   },
 
   criar: async (aluno) => {
-    const response = await api.post('/alunos', aluno);
-    return response.data;
+    console.log('Criando aluno com dados:', aluno);
+    try {
+      const response = await api.post('/alunos', aluno);
+      console.log('Aluno criado com sucesso:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erro na requisição POST:', error.response?.data || error.message);
+      throw error;
+    }
   },
 
   atualizar: async (id, aluno) => {

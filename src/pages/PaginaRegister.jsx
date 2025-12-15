@@ -1,9 +1,9 @@
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import BotaoLaranja from '../../components/BotaoLaranja/BotaoLaranja';
+import BotaoLaranja from '../components/BotaoLaranja';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';  
-import imgRegister from '../../assets/register-illustration.svg';
-import logo from '../../assets/logo.png';
+import imgRegister from '../assets/register-illustration.svg';
+import logo from '../assets/logo.png';
 
 export function PaginaRegister({register}) {
     const navigate = useNavigate();

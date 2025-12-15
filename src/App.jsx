@@ -1,14 +1,14 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import AppLayout from './pages/AppLayout/AppLayout';
-import Dashboard from './pages/Dashboard/Dashboard';
-import Login from './pages/Login/Login';
-import PaginaAlunos from './pages/PaginaAlunos/PaginaAlunos';
-import PaginaChamada from './pages/PaginaChamada/PaginaChamada';
-import PaginaAlunosInfo from './pages/PaginaAlunosInfo/PaginaAlunosInfo';
+import AppLayout from './pages/AppLayout';
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import PaginaAlunos from './pages/PaginaAlunos';
+import PaginaChamada from './pages/PaginaChamada';
+import PaginaAlunosInfo from './pages/PaginaAlunosInfo';
 import { RotaProtegida } from './contexts/PrivateRoutes';
-import PaginaRegister from './pages/Register/PaginaRegister';
-import PaginaAgenda from './pages/PaginaAgenda/PaginaAgenda';
+import PaginaRegister from './pages/PaginaRegister';
+import PaginaAgenda from './pages/PaginaAgenda';
 import AdminAlunos from './pages/Admin/AdminAlunos';
 import FormularioAluno from './pages/Admin/FormularioAluno';
 
@@ -24,9 +24,9 @@ function App() {
       <Route path="/register" element={<PaginaRegister />} />
       <Route element={<RotaProtegida />}>
         <Route path="/" element={<AppLayout />}>
-          <Route path="/admin/alunos" element={<AdminAlunos />} />
-          <Route path="/admin/alunos/novo" element={<FormularioAluno />} />
-          <Route path="/admin/alunos/editar/:id" element={<FormularioAluno />} />
+          <Route path="admin/alunos" element={<AdminAlunos />} />
+          <Route path="admin/alunos/novo" element={<FormularioAluno />} />
+          <Route path="admin/alunos/editar/:id" element={<FormularioAluno />} />
           <Route index element={<Dashboard />} />
           <Route path="alunos" element={<PaginaAlunos />} />
           <Route path="avisos" element={<Avisos />} />

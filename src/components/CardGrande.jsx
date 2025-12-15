@@ -1,5 +1,5 @@
 import React from 'react';
-import CardAtividades from '../CardAtividades/CardAtividades';
+import CardAtividades from './CardAtividades';
 import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 
 function CardGrande({ titulo, atividades = [] }) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSave } from '@fortawesome/free-solid-svg-icons';
-import dataService from '../../services/dataService';
+import dataService from '../services/dataService';
 
 function PaginaChamada() {
   // --- ESTADOS ---

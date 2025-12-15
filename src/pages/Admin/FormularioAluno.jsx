@@ -6,6 +6,8 @@ export default function FormularioAluno() {
   const navigate = useNavigate();
   const { id } = useParams();
   
+  console.log('FormularioAluno renderizado, id:', id);
+  
   const [formData, setFormData] = useState({
     nome_completo: '',
     data_nascimento: '',
@@ -28,12 +30,24 @@ export default function FormularioAluno() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (id) {
-      await alunoService.atualizar(id, formData);
-    } else {
-      await alunoService.criar(formData);
+    alert('Iniciando salvamento...');
+    try {
+      console.log('Enviando dados:', formData);
+      if (id) {
+        await alunoService.atualizar(id, formData);
+        alert('Aluno atualizado com sucesso!');
+      } else {
+        const response = await alunoService.criar(formData);
+        console.log('Resposta do servidor:', response);
+        alert('Aluno criado com sucesso!');
+      }
+      setTimeout(() => {
+        navigate('/admin/alunos');
+      }, 500);
+    } catch (error) {
+      console.error('Erro ao salvar aluno:', error);
+      alert('Erro ao salvar aluno: ' + error.message);
     }
-    navigate('/admin/alunos');
   };
 
   return (
@@ -44,8 +58,9 @@ export default function FormularioAluno() {
       
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Nome Completo</label>
+          <label htmlFor="nome_completo" className="block text-sm font-medium text-gray-700">Nome Completo</label>
           <input 
+            id="nome_completo"
             type="text" 
             name="nome_completo" 
             value={formData.nome_completo} 
@@ -56,8 +71,9 @@ export default function FormularioAluno() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Data de Nascimento</label>
+          <label htmlFor="data_nascimento" className="block text-sm font-medium text-gray-700">Data de Nascimento</label>
           <input 
+            id="data_nascimento"
             type="date" 
             name="data_nascimento" 
             value={formData.data_nascimento} 
@@ -68,8 +84,9 @@ export default function FormularioAluno() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Alergias</label>
+          <label htmlFor="alergias" className="block text-sm font-medium text-gray-700">Alergias</label>
           <input 
+            id="alergias"
             type="text" 
             name="alergias" 
             value={formData.alergias} 
@@ -80,8 +97,9 @@ export default function FormularioAluno() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Observações</label>
+          <label htmlFor="observacoes" className="block text-sm font-medium text-gray-700">Observações</label>
           <textarea 
+            id="observacoes"
             name="observacoes" 
             value={formData.observacoes} 
             onChange={handleChange}

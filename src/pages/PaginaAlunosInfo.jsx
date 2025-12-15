@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import dataService from '../../services/dataService';
+import dataService from '../services/dataService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faEnvelope, faPhone, faMapMarkerAlt, faHeartbeat, faRulerVertical, faWeight, faIdCard } from '@fortawesome/free-solid-svg-icons';
 

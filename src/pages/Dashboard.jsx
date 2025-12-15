@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faUsers, faEnvelopeOpenText, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import BotaoLaranja from '../../components/BotaoLaranja/BotaoLaranja';
-import CardGrande from '../../components/CardGrande/CardGrande';
+import BotaoLaranja from '../components/BotaoLaranja';
+import CardGrande from '../components/CardGrande';
 import { NavLink } from 'react-router-dom';
 
-import dataService from '../../services/dataService';
-import { useAuth } from '../../contexts/AuthContext';
+import dataService from '../services/dataService';
+import { useAuth } from '../contexts/AuthContext';
 
 function Dashboard() {
   const { user } = useAuth(); 

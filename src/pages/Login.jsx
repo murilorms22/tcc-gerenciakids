@@ -1,10 +1,10 @@
 import { useState } from 'react'; // 1. Importar useState
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import BotaoLaranja from '../../components/BotaoLaranja/BotaoLaranja';
+import BotaoLaranja from '../components/BotaoLaranja';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';  
-import imgLogin from '../../assets/login-illustration.svg';
-import logo from '../../assets/logo.png';
+import imgLogin from '../assets/login-illustration.svg';
+import logo from '../assets/logo.png';
 
 export function PaginaLogin() {
   const { login } = useAuth();
