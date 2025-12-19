@@ -1,21 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 @import "tailwindcss";
 
-* {
-  box-sizing: border-box;
-  font-family: "Lexend", sans-serif;
-}
-
-body {
-  display: flex;
-  flex-direction: row;
-  background-color: var(--bg-page);
-}
-
-#root {
-  display: flex;
-  width: 100vw;
-  
+:root {
   --bg-page: #f0f2f5;
   --orange: #ff7417;
   --light-orange: #ff6600;
@@ -30,5 +16,21 @@ body {
   --success-green: #2ecc71;
   --success-green-hover: #27ae60;
   --not-black: #232323;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Lexend", sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--bg-page);
+}
+
+#root {
+  display: flex;
+  width: 100vw;
 }
 @import './styles/_checkboxs.css';

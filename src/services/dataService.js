@@ -1,58 +1,40 @@
-import dbData from '../db.json';
+import api from './api';
 
 export const dataService = {
-  getAlunos: () => {
-    return Promise.resolve({
+  // Busca alunos via API
+  getAlunos: async () => {
+    const response = await api.get('/alunos');
+    return {
       data: {
-        users: dbData.alunos
+        users: response.data
       }
-    });
+    };
   },
 
-  getAlunoById: (id) => {
-    const aluno = dbData.alunos.find(u => u.id === id || u.id === parseInt(id));
-    if (!aluno) {
-      return Promise.reject(new Error('Aluno não encontrado'));
-    }
-    return Promise.resolve({
-      data: aluno
-    });
+  // Busca aluno por ID via API
+  getAlunoById: async (id) => {
+    const response = await api.get(`/alunos/${id}`);
+    return {
+      data: response.data
+    };
   },
 
-  getAtividades: () => {
-    return Promise.resolve({
+  // Busca atividades via API
+  getAtividades: async () => {
+    const response = await api.get('/atividades');
+    return {
       data: {
-        todos: dbData.atividades
+        todos: response.data
       }
-    });
+    };
   },
 
-  updateAluno: (id, data) => {
-    const index = dbData.alunos.findIndex(u => u.id === id || u.id === parseInt(id));
-    if (index === -1) {
-      return Promise.reject(new Error('Aluno não encontrado'));
-    }
-    dbData.alunos[index] = { ...dbData.alunos[index], ...data };
-    return Promise.resolve({
-      data: dbData.alunos[index]
-    });
-  },
-
-  autenticar: (username, password) => {
-    const usuario = dbData.usuarios.find(u => u.username === username && u.password === password);
-    if (!usuario) {
-      return Promise.reject(new Error('Usuário ou senha inválidos'));
-    }
-    return Promise.resolve({
-      data: {
-        accessToken: 'mock-token-' + usuario.id,
-        id: usuario.id,
-        firstName: usuario.firstName,
-        lastName: usuario.lastName,
-        email: usuario.email,
-        role: usuario.role
-      }
-    });
+  // Atualiza aluno via API
+  updateAluno: async (id, data) => {
+    const response = await api.put(`/alunos/${id}`, data);
+    return {
+      data: response.data
+    };
   }
 };
 
