@@ -32,7 +32,7 @@ function PaginaChamada() {
         
         const dadosAdaptados = response.data.users.map(user => ({
           ...user,
-          foto_perfil_url: user.image
+          foto_perfil_url: user.foto_perfil_url || user.image || 'https://via.placeholder.com/40'
         }));
 
         setAlunos(dadosAdaptados);

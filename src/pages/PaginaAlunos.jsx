@@ -34,7 +34,7 @@ function PaginaAlunos() {
           nome_completo: user.nome_completo,
           data_nascimento: user.data_nascimento,
           alergias: user.alergias,
-          foto: user.image
+          foto: user.foto_perfil_url || user.image || 'https://via.placeholder.com/40'
         }));
 
         setAlunos(dadosAdaptados);

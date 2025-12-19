@@ -16,11 +16,86 @@ export default function AdminAlunos() {
   
   const [formData, setFormData] = useState({
     nome_completo: '',
+    data_nascimento: '',
     alergias: 'Nenhuma',
     temAlergia: false,
     alergiasTexto: '',
     foto_perfil_url: ''
   });
+
+  /**
+   * Formata a data para exibição (dd/mm/aaaa)
+   * @param {string} dataISO - Data no formato ISO (yyyy-mm-dd)
+   * @returns {string} Data formatada (dd/mm/aaaa)
+   */
+  const formatarDataParaExibicao = (dataISO) => {
+    if (!dataISO) return '';
+    const partes = dataISO.split('-');
+    if (partes.length === 3) {
+      return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+    return dataISO;
+  };
+
+  /**
+   * Converte data de exibição (dd/mm/aaaa) para ISO (yyyy-mm-dd)
+   * @param {string} dataExibicao - Data no formato dd/mm/aaaa
+   * @returns {string} Data no formato ISO
+   */
+  const formatarDataParaISO = (dataExibicao) => {
+    if (!dataExibicao) return '';
+    const partes = dataExibicao.split('/');
+    if (partes.length === 3 && partes[0].length === 2 && partes[1].length === 2 && partes[2].length === 4) {
+      return `${partes[2]}-${partes[1]}-${partes[0]}`;
+    }
+    return '';
+  };
+
+  /**
+   * Aplica máscara de data (dd/mm/aaaa) ao digitar
+   * @param {string} valor - Valor digitado
+   * @returns {string} Valor com máscara aplicada
+   */
+  const aplicarMascaraData = (valor) => {
+    // Remove tudo que não é número
+    let numeros = valor.replace(/\D/g, '');
+    
+    // Limita a 8 dígitos
+    numeros = numeros.substring(0, 8);
+    
+    // Aplica a máscara
+    if (numeros.length <= 2) {
+      return numeros;
+    } else if (numeros.length <= 4) {
+      return `${numeros.substring(0, 2)}/${numeros.substring(2)}`;
+    } else {
+      return `${numeros.substring(0, 2)}/${numeros.substring(2, 4)}/${numeros.substring(4)}`;
+    }
+  };
+
+  /**
+   * Valida se a data é válida
+   * @param {string} data - Data no formato dd/mm/aaaa
+   * @returns {boolean}
+   */
+  const validarData = (data) => {
+    if (!data || data.length !== 10) return false;
+    const partes = data.split('/');
+    if (partes.length !== 3) return false;
+    
+    const dia = parseInt(partes[0], 10);
+    const mes = parseInt(partes[1], 10);
+    const ano = parseInt(partes[2], 10);
+    
+    if (isNaN(dia) || isNaN(mes) || isNaN(ano)) return false;
+    if (mes < 1 || mes > 12) return false;
+    if (dia < 1 || dia > 31) return false;
+    if (ano < 1900 || ano > new Date().getFullYear()) return false;
+    
+    // Validação mais precisa usando Date
+    const dataObj = new Date(ano, mes - 1, dia);
+    return dataObj.getDate() === dia && dataObj.getMonth() === mes - 1 && dataObj.getFullYear() === ano;
+  };
 
   // Preview da imagem selecionada
   const [previewImagem, setPreviewImagem] = useState('');
@@ -90,6 +165,7 @@ export default function AdminAlunos() {
     setAlunoEditando('novo');
     setFormData({
       nome_completo: '',
+      data_nascimento: '',
       alergias: 'Nenhuma',
       temAlergia: false,
       alergiasTexto: '',
@@ -104,6 +180,7 @@ export default function AdminAlunos() {
     setAlunoEditando(aluno.id);
     setFormData({
       nome_completo: aluno.nome_completo,
+      data_nascimento: formatarDataParaExibicao(aluno.data_nascimento),
       alergias: aluno.alergias,
       temAlergia: temAlergia,
       alergiasTexto: temAlergia ? aluno.alergias : '',
@@ -118,6 +195,7 @@ export default function AdminAlunos() {
     setAlunoEditando(null);
     setFormData({
       nome_completo: '',
+      data_nascimento: '',
       alergias: 'Nenhuma',
       temAlergia: false,
       alergiasTexto: '',
@@ -133,12 +211,18 @@ export default function AdminAlunos() {
       return;
     }
 
+    if (!formData.data_nascimento || !validarData(formData.data_nascimento)) {
+      alert('Por favor, preencha uma data de nascimento válida (dd/mm/aaaa).');
+      return;
+    }
+
     if (formData.temAlergia && !formData.alergiasTexto.trim()) {
       alert('Por favor, especifique a(s) alergia(s).');
       return;
     }
 
     const alergiasValue = formData.temAlergia ? formData.alergiasTexto : 'Nenhuma';
+    const dataNascimentoISO = formatarDataParaISO(formData.data_nascimento);
 
     setSalvando(true);
 
@@ -147,6 +231,7 @@ export default function AdminAlunos() {
         const novoAluno = {
           id_turma: 202,
           nome_completo: formData.nome_completo,
+          data_nascimento: dataNascimentoISO,
           firstName: formData.nome_completo.split(' ')[0],
           lastName: formData.nome_completo.split(' ').slice(1).join(' '),
           alergias: alergiasValue,
@@ -162,6 +247,7 @@ export default function AdminAlunos() {
         const alunoAtualizado = {
           ...alunos.find(a => a.id === alunoEditando),
           nome_completo: formData.nome_completo,
+          data_nascimento: dataNascimentoISO,
           alergias: alergiasValue,
           foto_perfil_url: formData.foto_perfil_url
         };
@@ -327,6 +413,22 @@ export default function AdminAlunos() {
               onChange={(e) => setFormData({ ...formData, nome_completo: e.target.value })}
               className="w-full px-4 py-3 border border-(--border-gray) rounded-lg text-base focus:outline-none focus:border-(--orange)"
               placeholder="Digite o nome completo do aluno"
+            />
+          </div>
+
+          {/* Data de Nascimento */}
+          <div>
+            <label htmlFor="data_nascimento" className="block text-sm font-semibold text-(--azul-escuro) mb-2">
+              Data de Nascimento *
+            </label>
+            <input
+              id="data_nascimento"
+              type="text"
+              value={formData.data_nascimento}
+              onChange={(e) => setFormData({ ...formData, data_nascimento: aplicarMascaraData(e.target.value) })}
+              className="w-full px-4 py-3 border border-(--border-gray) rounded-lg text-base focus:outline-none focus:border-(--orange)"
+              placeholder="dd/mm/aaaa"
+              maxLength={10}
             />
           </div>
 
