@@ -18,10 +18,11 @@ server.use(auth);
 // Router do json-server
 server.use(router);
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
+
 server.listen(PORT, () => {
-  console.log(`🚀 JSON Server + Auth rodando em http://localhost:${PORT}`);
-  console.log(`📧 Login: POST http://localhost:${PORT}/login`);
-  console.log(`📝 Register: POST http://localhost:${PORT}/register`);
-  console.log(`👥 Users: GET http://localhost:${PORT}/users`);
+  console.log(`🚀 JSON Server + Auth rodando em ${PORT}`);
+  console.log(`📧 Login: POST ${PORT}/login`);
+  console.log(`📝 Register: POST ${PORT}/register`);
+  console.log(`👥 Users: GET ${PORT}/users`);
 });
