@@ -3,7 +3,7 @@
     {
       "id": 1,
       "email": "professor@escola.com",
-      "password": "prof",
+      "password": "professordaescola",
       "firstName": "João",
       "lastName": "Silva",
       "role": "professor"
