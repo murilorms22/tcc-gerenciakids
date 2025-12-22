@@ -3,7 +3,7 @@
     {
       "id": 1,
       "email": "professor@escola.com",
-      "password": "$2a$10$XOPbrlUPQdwdJUpSrIF6X.LbE14qsMmKGhM1A8W9iqaG3vv1BD7WC",
+      "password": "prof",
       "firstName": "João",
       "lastName": "Silva",
       "role": "professor"
@@ -11,14 +11,14 @@
     {
       "id": 2,
       "email": "admin@escola.com",
-      "password": "$2a$10$XOPbrlUPQdwdJUpSrIF6X.LbE14qsMmKGhM1A8W9iqaG3vv1BD7WC",
+      "password": "admin",
       "firstName": "Admin",
       "lastName": "User",
       "role": "admin"
     },
     {
       "email": "teste@escola.com",
-      "password": "$2a$10$qTffWJCQ4fBTIC7CNFZsUefUEODIAqVhPjlV09S5ZLZcT6UhbN0oK",
+      "password": "teste",
       "firstName": "Teste",
       "lastName": "User",
       "id": 3
