@@ -1,26 +1,27 @@
 {
   "users": [
     {
-      "id": 1,
       "email": "professor@escola.com",
-      "password": "professordaescola",
-      "firstName": "João",
+      "password": "$2a$10$2Qj2pkOrU/dSSPBkEymyGe5Ws2z/v2wmBecG6tbTrpQgrTs9vr5Ly",
+      "firstName": "Joao",
       "lastName": "Silva",
-      "role": "professor"
+      "role": "professor",
+      "id": 1
     },
     {
-      "id": 2,
       "email": "admin@escola.com",
-      "password": "admin",
+      "password": "$2a$10$Kd/OGdF1JrMCkm1EaF7Hrua13lAwoA.LpNdW5xLqmbOYxa7xuqw9G",
       "firstName": "Admin",
       "lastName": "User",
-      "role": "admin"
+      "role": "admin",
+      "id": 2
     },
     {
       "email": "teste@escola.com",
-      "password": "teste",
+      "password": "$2a$10$RVRXiC9AV2pkLEcMy8ZUD.qekoVIsyDN2XwP8DazqxaKmuhpD5NhK",
       "firstName": "Teste",
       "lastName": "User",
+      "role": "professor",
       "id": 3
     }
   ],
