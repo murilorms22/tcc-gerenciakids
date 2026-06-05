@@ -37,7 +37,7 @@ export function PaginaLogin() {
 
   return (
     <>
-    <div className='flex flex-col m-auto h-screen items-center'>/
+    <div className='flex flex-col m-auto h-screen items-center'>
       <img src={logo} alt="" className='fixed top-1/2 -translate-y-[450%] w-64' />
       <div className='flex m-auto border-2 border-(--orange) rounded-[10px] shadow-[10px_10px_30px_rgba(0,0,0,0.2)]'>
         <div className='p-[70px] text-(--azul-escuro) h-[500px] bg-white rounded-l-[10px] flex flex-col justify-center'>
