@@ -60,8 +60,9 @@ export class AvisosController {
   updatePut(
     @Param('id', ParsePositiveIntPipe) id: number,
     @Body() dto: UpdateAvisoDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.avisosService.update(id, dto);
+    return this.avisosService.update(id, dto, user);
   }
 
   @Patch(':id')
@@ -69,8 +70,9 @@ export class AvisosController {
   updatePatch(
     @Param('id', ParsePositiveIntPipe) id: number,
     @Body() dto: UpdateAvisoDto,
+    @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.avisosService.update(id, dto);
+    return this.avisosService.update(id, dto, user);
   }
 
   @Delete(':id')

@@ -261,8 +261,8 @@ function PaginaAlunos() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] overflow-hidden">
-        <div className="grid grid-cols-[2.5fr_1.5fr_1fr_2fr_0.8fr] items-center p-4 px-6 gap-4 bg-(--bg-gray-light) font-bold text-(--text-gray) border-b border-(--border-gray)">
+      <div className="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)]">
+        <div className="grid grid-cols-[2.5fr_1.5fr_1fr_2fr_0.8fr] items-center p-4 px-6 gap-4 bg-(--bg-gray-light) font-bold text-(--text-gray) border-b border-(--border-gray) rounded-t-xl">
           <div
             className="cursor-pointer transition-colors duration-200 flex items-center gap-2 hover:text-(--azul-escuro)"
             onClick={() => handleSort('nome_completo')}
@@ -289,7 +289,7 @@ function PaginaAlunos() {
           {alunosFiltrados.length > 0 ? (
             alunosFiltrados.map((aluno) => (
               <div
-                className="grid grid-cols-[2.5fr_1.5fr_1fr_2fr_0.8fr] items-center p-4 px-6 gap-4 border-b border-(--border-light) last:border-b-0 hover:bg-gray-50 transition-colors"
+                className="grid grid-cols-[2.5fr_1.5fr_1fr_2fr_0.8fr] items-center p-4 px-6 gap-4 border-b border-(--border-light) last:border-b-0 last:rounded-b-xl hover:bg-gray-50 transition-colors"
                 key={aluno.id}
               >
                 <div className="font-bold text-(--azul-escuro) flex items-center gap-3">
@@ -307,13 +307,19 @@ function PaginaAlunos() {
                 <div>
                   {aluno.alergias &&
                   aluno.alergias.toLowerCase() !== 'nenhuma' ? (
-                    <span
-                      className="text-(--orange) font-bold flex items-center gap-2"
+                    <div
+                      className="relative inline-flex items-center group cursor-pointer"
                       title={aluno.alergias}
+                      aria-label={`Alerta médico: ${aluno.alergias}`}
                     >
-                      <FontAwesomeIcon icon={faExclamationTriangle} />
-                      <span className="truncate">{aluno.alergias}</span>
-                    </span>
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-orange-50 text-(--orange) text-lg">
+                        <FontAwesomeIcon icon={faExclamationTriangle} />
+                      </span>
+                      <div className="pointer-events-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-30 w-max max-w-xs px-3 py-2 rounded-lg bg-(--azul-escuro) text-white text-xs font-medium shadow-lg">
+                        {aluno.alergias}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-(--azul-escuro)" />
+                      </div>
+                    </div>
                   ) : (
                     <span className="text-(--text-gray) text-sm">Nenhuma</span>
                   )}

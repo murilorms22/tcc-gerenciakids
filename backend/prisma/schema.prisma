@@ -19,6 +19,12 @@ enum PrioridadeAviso {
   URGENTE
 }
 
+enum StatusAviso {
+  PENDENTE
+  APROVADO
+  REJEITADO
+}
+
 model User {
   id          Int          @id @default(autoincrement())
   nome        String
@@ -110,6 +116,7 @@ model Aviso {
   titulo     String
   conteudo   String          @db.Text
   prioridade PrioridadeAviso @default(NORMAL)
+  status     StatusAviso     @default(APROVADO)
   autorNome  String
   turmaId    Int?
   turma      Turma?          @relation(fields: [turmaId], references: [id], onDelete: SetNull)

@@ -36,7 +36,7 @@ function Sidebar({ isOpen = false, onClose = () => {} }) {
     }`;
 
   const sidebarContent = (
-    <div className="w-[320px] xl:w-[360px] min-h-screen bg-(--orange) text-white flex flex-col justify-between shrink-0">
+    <div className="w-[320px] xl:w-[360px] h-screen overflow-y-auto bg-(--orange) text-white flex flex-col justify-between shrink-0">
       <div>
         <div className="h-24 mt-4 px-4 flex items-center justify-between">
           <img
@@ -171,7 +171,9 @@ function Sidebar({ isOpen = false, onClose = () => {} }) {
   return (
     <>
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:flex shrink-0">{sidebarContent}</aside>
+      <aside className="hidden lg:flex shrink-0 sticky top-0 h-screen">
+        {sidebarContent}
+      </aside>
 
       {/* Drawer Mobile */}
       {isOpen && (

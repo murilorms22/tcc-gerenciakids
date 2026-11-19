@@ -10,6 +10,10 @@ import {
   faBullhorn,
   faUserEdit,
   faCalendarAlt,
+  faCheck,
+  faTimes,
+  faPen,
+  faClock,
 } from '@fortawesome/free-solid-svg-icons';
 import avisoService from '../services/avisoService';
 import turmaService from '../services/turmaService';
@@ -19,8 +23,9 @@ import Modal from '../components/Modal';
 export default function PaginaAvisos() {
   const { user } = useAuth();
   const role = user?.role || 'RESPONSAVEL';
-  const canCreate =
-    role === 'ADMIN' || role === 'DIRECAO' || role === 'PROFESSOR';
+  const isAdminOrDirecao = role === 'ADMIN' || role === 'DIRECAO';
+  const isProfessor = role === 'PROFESSOR';
+  const canCreate = isAdminOrDirecao || isProfessor;
 
   const [avisos, setAvisos] = useState([]);
   const [turmas, setTurmas] = useState([]);
@@ -28,8 +33,10 @@ export default function PaginaAvisos() {
   const [erro, setErro] = useState(null);
   const [filtroPrioridade, setFiltroPrioridade] = useState('');
   const [filtroTurma, setFiltroTurma] = useState('');
+  const [mensagemFeedback, setMensagemFeedback] = useState('');
 
   const [modalAberto, setModalAberto] = useState(false);
+  const [avisoEditandoAprovacao, setAvisoEditandoAprovacao] = useState(null);
   const [salvando, setSalvando] = useState(false);
   const [formData, setFormData] = useState({
     titulo: '',
@@ -59,7 +66,12 @@ export default function PaginaAvisos() {
     carregarDados();
   }, []);
 
-  const avisosFiltrados = avisos.filter((av) => {
+  const avisosPendentes = avisos.filter((av) => av.status === 'PENDENTE');
+  const avisosPublicados = avisos.filter(
+    (av) => !av.status || av.status === 'APROVADO',
+  );
+
+  const avisosFiltrados = avisosPublicados.filter((av) => {
     if (filtroPrioridade && av.prioridade !== filtroPrioridade) return false;
     if (filtroTurma === 'GERAL' && av.turmaId !== null) return false;
     if (
@@ -72,22 +84,88 @@ export default function PaginaAvisos() {
     return true;
   });
 
-  const handleCriarAviso = async (e) => {
+  const handleAbrirNovoAviso = () => {
+    setAvisoEditandoAprovacao(null);
+    setFormData({
+      titulo: '',
+      conteudo: '',
+      prioridade: 'NORMAL',
+      turmaId: '',
+    });
+    setModalAberto(true);
+  };
+
+  const handleAbrirEditarEPublicar = (aviso) => {
+    if (!isAdminOrDirecao) return;
+    setAvisoEditandoAprovacao(aviso);
+    setFormData({
+      titulo: aviso.titulo || '',
+      conteudo: aviso.conteudo || '',
+      prioridade: aviso.prioridade || 'NORMAL',
+      turmaId: aviso.turmaId ? String(aviso.turmaId) : '',
+    });
+    setModalAberto(true);
+  };
+
+  const handleFecharModal = () => {
+    setModalAberto(false);
+    setAvisoEditandoAprovacao(null);
+  };
+
+  const handleSalvarAviso = async (e) => {
     e.preventDefault();
     if (!formData.titulo.trim() || !formData.conteudo.trim()) return;
 
     setSalvando(true);
+    setMensagemFeedback('');
     try {
-      const novo = await avisoService.criar({
-        titulo: formData.titulo.trim(),
-        conteudo: formData.conteudo.trim(),
-        prioridade: formData.prioridade,
-        autorNome: user?.nome || 'Coordenação Escolar',
-        turmaId: formData.turmaId ? Number(formData.turmaId) : null,
-      });
+      if (avisoEditandoAprovacao && isAdminOrDirecao) {
+        const atualizado = await avisoService.atualizar(
+          avisoEditandoAprovacao.id,
+          {
+            titulo: formData.titulo.trim(),
+            conteudo: formData.conteudo.trim(),
+            prioridade: formData.prioridade,
+            turmaId: formData.turmaId ? Number(formData.turmaId) : null,
+            status: 'APROVADO',
+          },
+        );
+        setAvisos((prev) =>
+          prev.map((a) =>
+            a.id === avisoEditandoAprovacao.id
+              ? { ...atualizado, status: 'APROVADO' }
+              : a,
+          ),
+        );
+        setMensagemFeedback('Aviso editado e publicado com sucesso no mural!');
+      } else {
+        const novo = await avisoService.criar({
+          titulo: formData.titulo.trim(),
+          conteudo: formData.conteudo.trim(),
+          prioridade: formData.prioridade,
+          autorNome:
+            user?.nome ||
+            (isProfessor ? 'Professor(a)' : 'Coordenação Escolar'),
+          turmaId: formData.turmaId ? Number(formData.turmaId) : null,
+        });
 
-      setAvisos((prev) => [novo, ...prev]);
-      setModalAberto(false);
+        const avisoComStatus = {
+          ...novo,
+          status: novo?.status || (isProfessor ? 'PENDENTE' : 'APROVADO'),
+        };
+
+        setAvisos((prev) => [avisoComStatus, ...prev]);
+
+        if (isProfessor) {
+          setMensagemFeedback(
+            'Aviso enviado para a lista de aprovações da direção! Ele será publicado após avaliação.',
+          );
+        } else {
+          setMensagemFeedback('Aviso publicado com sucesso no mural!');
+        }
+      }
+
+      handleFecharModal();
       setFormData({
         titulo: '',
         conteudo: '',
@@ -95,14 +173,44 @@ export default function PaginaAvisos() {
         turmaId: '',
       });
     } catch (error) {
-      console.error('Erro ao publicar aviso:', error);
+      console.error('Erro ao salvar aviso:', error);
     } finally {
       setSalvando(false);
     }
   };
 
+  const handleConcordarAviso = async (aviso) => {
+    if (!isAdminOrDirecao) return;
+    try {
+      const atualizado = await avisoService.atualizar(aviso.id, {
+        status: 'APROVADO',
+      });
+      setAvisos((prev) =>
+        prev.map((a) =>
+          a.id === aviso.id ? { ...atualizado, status: 'APROVADO' } : a,
+        ),
+      );
+      setMensagemFeedback(
+        `Publicação "${aviso.titulo}" aprovada e publicada no mural!`,
+      );
+    } catch (error) {
+      console.error('Erro ao aprovar aviso:', error);
+    }
+  };
+
+  const handleNegarAviso = async (aviso) => {
+    if (!isAdminOrDirecao) return;
+    try {
+      await avisoService.atualizar(aviso.id, { status: 'REJEITADO' });
+      setAvisos((prev) => prev.filter((a) => a.id !== aviso.id));
+      setMensagemFeedback(`Publicação "${aviso.titulo}" negada pela direção.`);
+    } catch (error) {
+      console.error('Erro ao negar aviso:', error);
+    }
+  };
+
   const handleExcluirAviso = async (id) => {
-    if (!canCreate) return;
+    if (!isAdminOrDirecao) return;
     try {
       await avisoService.deletar(id);
       setAvisos((prev) => prev.filter((a) => a.id !== id));
@@ -158,7 +266,7 @@ export default function PaginaAvisos() {
         {canCreate && (
           <button
             type="button"
-            onClick={() => setModalAberto(true)}
+            onClick={handleAbrirNovoAviso}
             className="bg-(--orange) text-white px-5 py-3 rounded-lg text-base font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--light-orange) border-none"
           >
             <FontAwesomeIcon icon={faPlus} />
@@ -166,6 +274,147 @@ export default function PaginaAvisos() {
           </button>
         )}
       </header>
+
+      {mensagemFeedback && (
+        <div className="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 font-semibold flex items-center justify-between">
+          <span>{mensagemFeedback}</span>
+          <button
+            type="button"
+            onClick={() => setMensagemFeedback('')}
+            className="bg-transparent border-none text-green-800 cursor-pointer font-bold"
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+        </div>
+      )}
+
+      {/* Lista de Aprovações para a Direção (e visualização de pendentes pelo Professor) */}
+      {(isAdminOrDirecao ||
+        (isProfessor && avisosPendentes.length > 0)) && (
+        <section className="mb-8 bg-amber-50/70 border border-amber-200 rounded-xl p-6 shadow-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <div className="flex items-center gap-2.5">
+              <FontAwesomeIcon
+                icon={faClock}
+                className="text-(--orange) text-xl"
+              />
+              <h2 className="text-xl font-bold text-(--azul-escuro) m-0">
+                {isAdminOrDirecao
+                  ? 'Lista de Aprovações de Avisos'
+                  : 'Avisos Aguardando Aprovação da Direção'}
+              </h2>
+            </div>
+            <span className="text-xs font-bold bg-orange-100 text-(--dark-orange) px-3 py-1 rounded-full">
+              {avisosPendentes.length} pendente(s)
+            </span>
+          </div>
+
+          {avisosPendentes.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {avisosPendentes.map((aviso) => {
+                const isUrgente = aviso.prioridade === 'URGENTE';
+                return (
+                  <div
+                    key={aviso.id}
+                    className="relative bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-[6px] border-l-amber-500 flex flex-col justify-between"
+                  >
+                    {isAdminOrDirecao && (
+                      <button
+                        type="button"
+                        onClick={() => handleAbrirEditarEPublicar(aviso)}
+                        className="absolute top-4 right-4 w-9 h-9 rounded-lg bg-orange-50 text-(--orange) hover:bg-(--orange) hover:text-white transition-colors border border-orange-200 cursor-pointer flex items-center justify-center"
+                        title="Editar e publicar"
+                        aria-label="Editar e publicar"
+                      >
+                        <FontAwesomeIcon icon={faPen} />
+                      </button>
+                    )}
+
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap mb-3 pr-10">
+                        <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-800">
+                          <FontAwesomeIcon icon={faClock} />
+                          Aguardando Aprovação
+                        </span>
+
+                        <span
+                          className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full ${
+                            isUrgente
+                              ? 'bg-red-100 text-red-700'
+                              : 'bg-orange-100 text-(--dark-orange)'
+                          }`}
+                        >
+                          <FontAwesomeIcon
+                            icon={isUrgente ? faExclamationCircle : faBullhorn}
+                          />
+                          {aviso.prioridade}
+                        </span>
+
+                        <span className="text-xs font-semibold bg-(--bg-gray-light) text-(--azul-escuro) px-3 py-1 rounded-full border border-(--border-gray)">
+                          {aviso.turma?.nome
+                            ? `Turma: ${aviso.turma.nome}`
+                            : 'Geral • Toda a Escola'}
+                        </span>
+                      </div>
+
+                      <h3 className="text-lg font-bold text-(--azul-escuro) mb-2">
+                        {aviso.titulo}
+                      </h3>
+
+                      <p className="text-sm text-(--not-black) leading-relaxed mb-4">
+                        {aviso.conteudo}
+                      </p>
+                    </div>
+
+                    <div>
+                      <div className="pt-3 border-t border-(--border-light) flex items-center justify-between text-xs text-(--text-gray)">
+                        <span className="flex items-center gap-1.5 font-semibold">
+                          <FontAwesomeIcon icon={faUserEdit} />
+                          Solicitado por: {aviso.autorNome}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <FontAwesomeIcon icon={faCalendarAlt} />
+                          {formatarData(aviso.createdAt)}
+                        </span>
+                      </div>
+
+                      {isAdminOrDirecao && (
+                        <div className="mt-4 pt-3 border-t border-(--border-light) flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-2 flex-1">
+                            <button
+                              type="button"
+                              onClick={() => handleConcordarAviso(aviso)}
+                              className="flex-1 bg-(--success-green) hover:bg-(--success-green-hover) text-white py-2 px-4 rounded-lg text-sm font-bold cursor-pointer border-none flex items-center justify-center gap-2 transition-colors"
+                              title="Concordar e publicar aviso"
+                            >
+                              <FontAwesomeIcon icon={faCheck} />
+                              <span>Concordar</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleNegarAviso(aviso)}
+                              className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg text-sm font-bold cursor-pointer border-none flex items-center justify-center gap-2 transition-colors"
+                              title="Negar publicação do aviso"
+                            >
+                              <FontAwesomeIcon icon={faTimes} />
+                              <span>Negar</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-sm text-(--text-gray) m-0">
+              Nenhuma solicitação de publicação de aviso pendente no momento.
+            </p>
+          )}
+        </section>
+      )}
 
       {/* Filtros */}
       <div className="mb-6 flex flex-wrap gap-4">
@@ -228,7 +477,7 @@ export default function PaginaAvisos() {
                     </span>
                   </div>
 
-                  {canCreate && (
+                  {isAdminOrDirecao && (
                     <button
                       type="button"
                       onClick={() => handleExcluirAviso(aviso.id)}
@@ -273,13 +522,25 @@ export default function PaginaAvisos() {
         </div>
       )}
 
-      {/* Modal de Criação de Aviso */}
+      {/* Modal de Criação / Edição e Publicação de Aviso */}
       <Modal
         isOpen={modalAberto}
-        onClose={() => setModalAberto(false)}
-        title="Publicar Novo Comunicado"
+        onClose={handleFecharModal}
+        title={
+          avisoEditandoAprovacao
+            ? 'Editar e Publicar Comunicado'
+            : isProfessor
+              ? 'Solicitar Publicação de Comunicado'
+              : 'Publicar Novo Comunicado'
+        }
       >
-        <form onSubmit={handleCriarAviso} className="space-y-4">
+        <form onSubmit={handleSalvarAviso} className="space-y-4">
+          {isProfessor && !avisoEditandoAprovacao && (
+            <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+              Nota: Como professor(a), seu aviso será encaminhado para a lista
+              de aprovações da direção antes de ser publicado no mural.
+            </div>
+          )}
           <div>
             <label className="block text-sm font-semibold text-(--azul-escuro) mb-1">
               Título do Comunicado *
@@ -356,11 +617,17 @@ export default function PaginaAvisos() {
               disabled={salvando}
               className="flex-1 bg-(--orange) text-white py-3 px-6 rounded-lg text-base font-bold cursor-pointer hover:bg-(--dark-orange) border-none disabled:opacity-50"
             >
-              {salvando ? 'Publicando...' : 'Publicar Aviso'}
+              {salvando
+                ? 'Processando...'
+                : avisoEditandoAprovacao
+                  ? 'Editar e Publicar'
+                  : isProfessor
+                    ? 'Enviar para Aprovação'
+                    : 'Publicar Aviso'}
             </button>
             <button
               type="button"
-              onClick={() => setModalAberto(false)}
+              onClick={handleFecharModal}
               className="flex-1 bg-(--border-gray) text-(--azul-escuro) py-3 px-6 rounded-lg text-base font-bold cursor-pointer border-none"
             >
               Cancelar

@@ -23,6 +23,7 @@ function Dashboard() {
   const { user } = useAuth();
   const role = user?.role || 'PROFESSOR';
   const isAdminOrDirecao = role === 'ADMIN' || role === 'DIRECAO';
+  const isProfessor = role === 'PROFESSOR';
   const isResponsavel = role === 'RESPONSAVEL';
 
   const [alunos, setAlunos] = useState([]);
@@ -92,7 +93,12 @@ function Dashboard() {
   const alunosComAlergia = alunos.filter(
     (a) => a.alergias && a.alergias.toLowerCase() !== 'nenhuma',
   );
-  const avisosUrgentes = avisos.filter((av) => av.prioridade === 'URGENTE');
+  const avisosPublicados = avisos.filter(
+    (av) => !av.status || av.status === 'APROVADO',
+  );
+  const avisosUrgentes = avisosPublicados.filter(
+    (av) => av.prioridade === 'URGENTE',
+  );
 
   const subtituloPorPerfil = () => {
     if (isAdminOrDirecao) {
@@ -125,7 +131,11 @@ function Dashboard() {
       </header>
 
       {/* KPIs Reais Adaptados por Perfil */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <section
+        className={`grid grid-cols-1 sm:grid-cols-2 ${
+          isProfessor ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+        } gap-6 mb-8`}
+      >
         <NavLink to="/alunos" className="no-underline">
           <div className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-[5px] border-l-(--orange-accent) hover:translate-y-[-2px] transition-transform">
             <h3 className="text-sm font-semibold text-(--text-gray) mb-2">
@@ -137,24 +147,35 @@ function Dashboard() {
           </div>
         </NavLink>
 
-        <NavLink to="/alunos" className="no-underline">
-          <div className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-[5px] border-l-(--orange-accent) hover:translate-y-[-2px] transition-transform">
-            <h3 className="text-sm font-semibold text-(--text-gray) mb-2">
-              Alertas de Alergia (LGPD)
-            </h3>
-            <p className="text-4xl font-bold text-(--orange)">
-              {alunosComAlergia.length}
-            </p>
-          </div>
-        </NavLink>
+        {!isProfessor && (
+          <NavLink to="/alunos" className="no-underline">
+            <div className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-[5px] border-l-(--orange-accent) hover:translate-y-[-2px] transition-transform">
+              <h3 className="text-sm font-semibold text-(--text-gray) mb-2">
+                Alertas de Alergia (LGPD)
+              </h3>
+              <p className="text-4xl font-bold text-(--orange)">
+                {alunosComAlergia.length}
+              </p>
+            </div>
+          </NavLink>
+        )}
 
         <NavLink to="/avisos" className="no-underline">
-          <div className="bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-[5px] border-l-(--orange-accent) hover:translate-y-[-2px] transition-transform">
-            <h3 className="text-sm font-semibold text-(--text-gray) mb-2">
-              Avisos no Mural ({avisosUrgentes.length} urgentes)
-            </h3>
+          <div className="relative bg-white p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border-l-[5px] border-l-(--orange-accent) hover:translate-y-[-2px] transition-transform">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <h3 className="text-sm font-semibold text-(--text-gray) m-0">
+                Avisos no Mural
+              </h3>
+              <span
+                className="inline-flex items-center gap-1 text-sm font-bold text-(--orange)"
+                title={`${avisosUrgentes.length} aviso(s) urgente(s)`}
+              >
+                <span>{avisosUrgentes.length}</span>
+                <FontAwesomeIcon icon={faExclamationTriangle} />
+              </span>
+            </div>
             <p className="text-4xl font-bold text-(--azul-escuro)">
-              {avisos.length}
+              {avisosPublicados.length}
             </p>
           </div>
         </NavLink>
@@ -249,7 +270,7 @@ function Dashboard() {
               </NavLink>
             </div>
             <div className="space-y-3">
-              {avisos.slice(0, 3).map((aviso) => (
+              {avisosPublicados.slice(0, 3).map((aviso) => (
                 <div
                   key={aviso.id}
                   className="p-4 rounded-lg bg-(--bg-gray-light) border border-(--border-light)"
@@ -273,7 +294,7 @@ function Dashboard() {
                   </p>
                 </div>
               ))}
-              {avisos.length === 0 && (
+              {avisosPublicados.length === 0 && (
                 <p className="text-sm text-(--text-gray)">
                   Nenhum comunicado publicado até o momento.
                 </p>

@@ -1,4 +1,4 @@
-import { PrioridadeAviso } from '@prisma/client';
+import { PrioridadeAviso, StatusAviso } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 
@@ -14,6 +14,10 @@ export class UpdateAvisoDto {
   @IsOptional()
   @IsEnum(PrioridadeAviso)
   prioridade?: PrioridadeAviso;
+
+  @IsOptional()
+  @IsEnum(StatusAviso)
+  status?: StatusAviso;
 
   @IsOptional()
   @IsString()

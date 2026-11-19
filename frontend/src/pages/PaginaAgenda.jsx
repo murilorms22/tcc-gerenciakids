@@ -6,6 +6,7 @@ import {
   faTimesCircle,
   faArrowLeft,
   faPlus,
+  faPen,
   faTrash,
   faClock,
   faDoorOpen,
@@ -31,6 +32,7 @@ function PaginaAgenda() {
   const [turmaFiltro, setTurmaFiltro] = useState('');
 
   const [modalAberto, setModalAberto] = useState(false);
+  const [atividadeEditando, setAtividadeEditando] = useState(null);
   const [salvando, setSalvando] = useState(false);
   const [formData, setFormData] = useState({
     titulo: '',
@@ -112,7 +114,37 @@ function PaginaAgenda() {
     }
   };
 
-  const handleCriarAtividade = async (e) => {
+  const handleAbrirNovaAtividade = () => {
+    setAtividadeEditando(null);
+    setFormData({
+      titulo: '',
+      descricao: '',
+      horario: '09:00',
+      sala: 'Sala 01',
+      turmaId: turmas[0]?.id || '',
+    });
+    setModalAberto(true);
+  };
+
+  const handleAbrirEditarAtividade = (atividade) => {
+    if (!canEdit) return;
+    setAtividadeEditando(atividade);
+    setFormData({
+      titulo: atividade.titulo || '',
+      descricao: atividade.descricao || '',
+      horario: atividade.horario || '09:00',
+      sala: atividade.sala || 'Sala 01',
+      turmaId: atividade.turmaId || turmas[0]?.id || '',
+    });
+    setModalAberto(true);
+  };
+
+  const handleFecharModal = () => {
+    setModalAberto(false);
+    setAtividadeEditando(null);
+  };
+
+  const handleSalvarAtividade = async (e) => {
     e.preventDefault();
     if (
       !formData.titulo.trim() ||
@@ -125,17 +157,33 @@ function PaginaAgenda() {
 
     setSalvando(true);
     try {
-      const criada = await atividadeService.criar({
+      const payload = {
         titulo: formData.titulo.trim(),
         descricao: formData.descricao.trim(),
         horario: formData.horario.trim(),
         sala: formData.sala.trim(),
         turmaId: Number(formData.turmaId),
-        concluida: false,
-      });
+      };
 
-      setAtividades((prev) => [...prev, criada]);
-      setModalAberto(false);
+      if (atividadeEditando) {
+        const atualizada = await atividadeService.atualizar(
+          atividadeEditando.id,
+          payload,
+        );
+        setAtividades((prev) =>
+          prev.map((item) =>
+            item.id === atividadeEditando.id ? atualizada : item,
+          ),
+        );
+      } else {
+        const criada = await atividadeService.criar({
+          ...payload,
+          concluida: false,
+        });
+        setAtividades((prev) => [...prev, criada]);
+      }
+
+      handleFecharModal();
       setFormData({
         titulo: '',
         descricao: '',
@@ -144,7 +192,7 @@ function PaginaAgenda() {
         turmaId: turmas[0]?.id || '',
       });
     } catch (error) {
-      console.error('Erro ao criar atividade:', error);
+      console.error('Erro ao salvar atividade:', error);
     } finally {
       setSalvando(false);
     }
@@ -193,7 +241,7 @@ function PaginaAgenda() {
         {canEdit && (
           <button
             type="button"
-            onClick={() => setModalAberto(true)}
+            onClick={handleAbrirNovaAtividade}
             className="bg-(--orange) text-white px-5 py-3 rounded-lg text-base font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--light-orange) border-none"
           >
             <FontAwesomeIcon icon={faPlus} />
@@ -308,14 +356,25 @@ function PaginaAgenda() {
                   </button>
 
                   {canEdit && (
-                    <button
-                      type="button"
-                      onClick={() => handleExcluirAtividade(atividade.id)}
-                      className="text-red-500 hover:text-red-700 bg-transparent border-none cursor-pointer"
-                      title="Excluir atividade"
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => handleAbrirEditarAtividade(atividade)}
+                        className="text-(--orange) hover:text-(--dark-orange) bg-transparent border-none cursor-pointer"
+                        title="Editar atividade"
+                      >
+                        <FontAwesomeIcon icon={faPen} />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleExcluirAtividade(atividade.id)}
+                        className="text-red-500 hover:text-red-700 bg-transparent border-none cursor-pointer"
+                        title="Excluir atividade"
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
@@ -328,13 +387,15 @@ function PaginaAgenda() {
         </div>
       </div>
 
-      {/* Modal de Nova Atividade */}
+      {/* Modal de Nova / Editar Atividade */}
       <Modal
         isOpen={modalAberto}
-        onClose={() => setModalAberto(false)}
-        title="Cadastrar Nova Atividade"
+        onClose={handleFecharModal}
+        title={
+          atividadeEditando ? 'Editar Atividade' : 'Cadastrar Nova Atividade'
+        }
       >
-        <form onSubmit={handleCriarAtividade} className="space-y-4">
+        <form onSubmit={handleSalvarAtividade} className="space-y-4">
           <div>
             <label className="block text-sm font-semibold text-(--azul-escuro) mb-1">
               Título da Atividade *
@@ -427,11 +488,15 @@ function PaginaAgenda() {
               disabled={salvando}
               className="flex-1 bg-(--orange) text-white py-3 px-6 rounded-lg text-base font-bold cursor-pointer hover:bg-(--dark-orange) border-none disabled:opacity-50"
             >
-              {salvando ? 'Salvando...' : 'Salvar Atividade'}
+              {salvando
+                ? 'Salvando...'
+                : atividadeEditando
+                  ? 'Salvar Alterações'
+                  : 'Salvar Atividade'}
             </button>
             <button
               type="button"
-              onClick={() => setModalAberto(false)}
+              onClick={handleFecharModal}
               className="flex-1 bg-(--border-gray) text-(--azul-escuro) py-3 px-6 rounded-lg text-base font-bold cursor-pointer border-none"
             >
               Cancelar

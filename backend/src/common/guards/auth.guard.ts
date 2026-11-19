@@ -36,16 +36,25 @@ export class AuthGuard implements CanActivate {
         include: { user: true },
       });
 
-      if (!storedToken || !storedToken.user) {
+      let authUser = storedToken?.user || null;
+
+      // Fallback para instâncias serverless (cold start na Vercel) quando o JWT é válido
+      if (!authUser && this.prisma.isUsingInMemoryFallback && payload?.sub) {
+        authUser = await this.prisma.user.findUnique({
+          where: { id: Number(payload.sub) },
+        });
+      }
+
+      if (!authUser) {
         throw new UnauthorizedException('Sessão expirada ou token revogado.');
       }
 
       request['user'] = {
-        id: storedToken.user.id,
-        sub: payload.sub || storedToken.user.id,
-        email: storedToken.user.email,
-        nome: storedToken.user.nome,
-        role: storedToken.user.role,
+        id: authUser.id,
+        sub: payload.sub || authUser.id,
+        email: authUser.email,
+        nome: authUser.nome,
+        role: authUser.role,
       };
       request['rawToken'] = token;
 
