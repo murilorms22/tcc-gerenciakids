@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+@import "tailwindcss";
+
+:root {
+  --bg-page: #f0f2f5;
+  --orange: #ff7417;
+  --light-orange: #ff6600;
+  --dark-orange: #be5d1d;
+  --azul-escuro: #2c3e50;
+  --azul-claro: #34495e;
+  --gray-disabled: #95a5a6;
+  --text-gray: #7f8c8d;
+  --border-gray: #dee2e6;
+  --border-light: #f1f1f1;
+  --bg-gray-light: #f8f9fa;
+  --orange-accent: #f5741e;
+  --success-green: #2ecc71;
+  --success-green-hover: #27ae60;
+  --not-black: #232323;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Lexend", sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--bg-page);
+  margin: 0;
+}
+
+#root {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+@import './styles/_checkboxs.css';
