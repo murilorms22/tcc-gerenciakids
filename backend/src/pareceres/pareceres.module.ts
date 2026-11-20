@@ -9,3 +9,4 @@ import { PareceresService } from './pareceres.service';
   providers: [PareceresService],
 })
 export class PareceresModule {}
+

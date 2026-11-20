@@ -24,3 +24,4 @@ export class UpdateParecerDto {
   @Min(1)
   alunoId?: number;
 }
+

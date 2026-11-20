@@ -29,3 +29,4 @@ export class CreateParecerDto {
   @Min(1)
   alunoId: number;
 }
+

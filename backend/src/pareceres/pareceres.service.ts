@@ -78,3 +78,4 @@ export class PareceresService {
     return { id, message: 'Parecer pedagógico excluído com sucesso.' };
   }
 }
+

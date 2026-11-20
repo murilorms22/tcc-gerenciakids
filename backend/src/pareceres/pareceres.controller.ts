@@ -79,3 +79,4 @@ export class PareceresController {
     return this.pareceresService.remove(id);
   }
 }
+
