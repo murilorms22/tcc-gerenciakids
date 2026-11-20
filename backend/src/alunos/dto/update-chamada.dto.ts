@@ -11,5 +11,9 @@ export class UpdateChamadaDto {
   @IsOptional()
   @IsBoolean()
   incrementar?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  ausenteHoje?: boolean;
 }
 

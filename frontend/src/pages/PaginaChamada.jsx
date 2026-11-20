@@ -3,13 +3,26 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
   faSave,
+  faPen,
+  faCheckCircle,
   faArrowLeft,
 } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import alunoService from '../services/alunoService';
 import turmaService from '../services/turmaService';
 
+function obterDataHojeKey() {
+  const hoje = new Date();
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+  const dia = String(hoje.getDate()).padStart(2, '0');
+  return `${ano}-${mes}-${dia}`;
+}
+
 function PaginaChamada() {
+  const dataHoje = obterDataHojeKey();
+  const storageKey = `CHAMADA_DIARIA_${dataHoje}`;
+
   const [alunos, setAlunos] = useState([]);
   const [turmas, setTurmas] = useState([]);
   const [alunosFiltrados, setAlunosFiltrados] = useState([]);
@@ -24,10 +37,16 @@ function PaginaChamada() {
   });
 
   const [listaDeAusentes, setListaDeAusentes] = useState(new Set());
+  const [ausentesSalvosHoje, setAusentesSalvosHoje] = useState(new Set());
+  const [chamadaRealizadaHoje, setChamadaRealizadaHoje] = useState(false);
+  const [editandoChamada, setEditandoChamada] = useState(false);
+
   const [salvando, setSalvando] = useState(false);
   const [mensagemFeedback, setMensagemFeedback] = useState('');
 
   const [totalAulas] = useState(100);
+
+  const botoesDesativados = chamadaRealizadaHoje && !editandoChamada;
 
   const calcularFrequencia = (faltas) => {
     if (totalAulas === 0) return '100.0';
@@ -35,6 +54,26 @@ function PaginaChamada() {
     const percentualFrequencia = (presencas / totalAulas) * 100;
     return Math.max(0, percentualFrequencia).toFixed(1);
   };
+
+  useEffect(() => {
+    try {
+      const salvo = localStorage.getItem(storageKey);
+      if (salvo) {
+        const parsed = JSON.parse(salvo);
+        if (parsed && parsed.realizada) {
+          const ids = Array.isArray(parsed.ausentesIds)
+            ? parsed.ausentesIds.map(Number)
+            : [];
+          setChamadaRealizadaHoje(true);
+          setEditandoChamada(false);
+          setAusentesSalvosHoje(new Set(ids));
+          setListaDeAusentes(new Set(ids));
+        }
+      }
+    } catch (e) {
+      console.error('Erro ao ler estado da chamada diária:', e);
+    }
+  }, [storageKey]);
 
   useEffect(() => {
     const buscarDados = async () => {
@@ -99,6 +138,7 @@ function PaginaChamada() {
   }, [alunos, termoPesquisa, turmaSelecionada, sortConfig]);
 
   const handleAusenciaToggle = (alunoId) => {
+    if (botoesDesativados) return;
     setListaDeAusentes((prevAusentes) => {
       const novosAusentes = new Set(prevAusentes);
       if (novosAusentes.has(alunoId)) {
@@ -110,40 +150,86 @@ function PaginaChamada() {
     });
   };
 
-  const handleSubmitChamada = async () => {
-    if (listaDeAusentes.size === 0) {
-      setMensagemFeedback(
-        'Chamada confirmada: todos os alunos presentes hoje (0 faltas adicionadas).',
-      );
-      return;
-    }
+  const handleIniciarEdicao = () => {
+    setEditandoChamada(true);
+    setMensagemFeedback(
+      'Modo de edição ativado: ajuste as ausências de hoje e clique em Salvar Chamada.',
+    );
+  };
 
+  const handleSubmitChamada = async () => {
     setSalvando(true);
     setMensagemFeedback('');
 
-    const alunosAusentes = alunos.filter((aluno) =>
-      listaDeAusentes.has(aluno.id),
+    // Um aluno não pode tomar 2 faltas em 1 dia:
+    // - novosAusentes: marcados agora, mas que AINDA NÃO tinham recebido falta hoje (+1 falta)
+    // - ausentesRemovidos: tinham recebido falta hoje, mas foram desmarcados na edição (-1 falta)
+    const novosAusentes = alunos.filter(
+      (aluno) =>
+        listaDeAusentes.has(aluno.id) && !ausentesSalvosHoje.has(aluno.id),
     );
-
-    const promises = alunosAusentes.map((aluno) =>
-      alunoService.registrarChamada(aluno.id, { incrementar: true }),
+    const ausentesRemovidos = alunos.filter(
+      (aluno) =>
+        !listaDeAusentes.has(aluno.id) && ausentesSalvosHoje.has(aluno.id),
     );
 
     try {
-      await Promise.all(promises);
+      const promises = [
+        ...novosAusentes.map((aluno) =>
+          alunoService.registrarChamada(aluno.id, {
+            faltas: (aluno.faltas || 0) + 1,
+            ausenteHoje: true,
+          }),
+        ),
+        ...ausentesRemovidos.map((aluno) =>
+          alunoService.registrarChamada(aluno.id, {
+            faltas: Math.max(0, (aluno.faltas || 0) - 1),
+            ausenteHoje: false,
+          }),
+        ),
+      ];
+
+      if (promises.length > 0) {
+        await Promise.all(promises);
+      }
+
+      const idsNovosAusentes = new Set(novosAusentes.map((a) => a.id));
+      const idsRemovidos = new Set(ausentesRemovidos.map((a) => a.id));
 
       const novaListaAlunos = alunos.map((aluno) => {
-        if (listaDeAusentes.has(aluno.id)) {
+        if (idsNovosAusentes.has(aluno.id)) {
           return { ...aluno, faltas: (aluno.faltas || 0) + 1 };
+        }
+        if (idsRemovidos.has(aluno.id)) {
+          return { ...aluno, faltas: Math.max(0, (aluno.faltas || 0) - 1) };
         }
         return aluno;
       });
 
       setAlunos(novaListaAlunos);
-      setMensagemFeedback(
-        `${promises.length} falta(s) registrada(s) com sucesso na API e auditadas!`,
+
+      const ausentesHojeSet = new Set(listaDeAusentes);
+      setAusentesSalvosHoje(ausentesHojeSet);
+      setChamadaRealizadaHoje(true);
+      setEditandoChamada(false);
+
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          realizada: true,
+          ausentesIds: Array.from(ausentesHojeSet),
+        }),
       );
-      setListaDeAusentes(new Set());
+
+      if (ausentesHojeSet.size === 0) {
+        setMensagemFeedback(
+          'Chamada do dia realizada: todos os alunos presentes hoje (0 faltas no dia).',
+        );
+      } else {
+        setMensagemFeedback(
+          `Chamada do dia salva com sucesso! ${ausentesHojeSet.size} aluno(s) registrado(s) com ausência hoje.`,
+        );
+      }
     } catch (err) {
       console.error('Erro ao salvar:', err);
       setMensagemFeedback('Erro ao registrar chamada na API.');
@@ -163,23 +249,34 @@ function PaginaChamada() {
 
   return (
     <div className="w-full p-4 md:p-8">
-      <header className="mb-6 flex items-center gap-4">
-        <Link
-          to="/"
-          className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-sm text-(--azul-escuro) hover:bg-(--orange) hover:text-white transition-colors duration-200"
-          title="Voltar ao painel"
-        >
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </Link>
-        <div>
-          <h1 className="text-(--azul-escuro) text-3xl md:text-4xl font-bold">
-            Registro de Chamada
-          </h1>
-          <p className="text-base md:text-lg text-(--text-gray) mt-1">
-            Marque os alunos que FALTARAM hoje para atualizar a frequência da
-            turma.
-          </p>
+      <header className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <Link
+            to="/"
+            className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-sm text-(--azul-escuro) hover:bg-(--orange) hover:text-white transition-colors duration-200"
+            title="Voltar ao painel"
+          >
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </Link>
+          <div>
+            <h1 className="text-(--azul-escuro) text-3xl md:text-4xl font-bold">
+              Registro de Chamada
+            </h1>
+            <p className="text-base md:text-lg text-(--text-gray) mt-1">
+              Marque os alunos que FALTARAM hoje para atualizar a frequência da
+              turma.
+            </p>
+          </div>
         </div>
+
+        {chamadaRealizadaHoje && (
+          <span className="inline-flex items-center gap-2 bg-green-100 text-green-800 text-xs font-bold px-3.5 py-2 rounded-full">
+            <FontAwesomeIcon icon={faCheckCircle} />
+            {editandoChamada
+              ? 'Editando chamada de hoje'
+              : 'Chamada de hoje realizada'}
+          </span>
+        )}
       </header>
 
       {mensagemFeedback && (
@@ -270,7 +367,8 @@ function PaginaChamada() {
                     <input
                       type="checkbox"
                       aria-label={`Marcar ausência de ${aluno.nome_completo}`}
-                      className="w-6 h-6 cursor-pointer custom-checkbox"
+                      disabled={botoesDesativados}
+                      className="w-6 h-6 cursor-pointer custom-checkbox disabled:opacity-50 disabled:cursor-not-allowed"
                       checked={listaDeAusentes.has(aluno.id)}
                       onChange={() => handleAusenciaToggle(aluno.id)}
                     />
@@ -287,14 +385,26 @@ function PaginaChamada() {
       </div>
 
       <div className="mt-8 flex justify-end">
-        <button
-          className="bg-(--success-green) text-white border-none py-3 px-6 rounded-lg text-lg font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--success-green-hover) disabled:bg-gray-400 disabled:cursor-not-allowed"
-          onClick={handleSubmitChamada}
-          disabled={salvando}
-        >
-          <FontAwesomeIcon icon={faSave} />
-          <span>{salvando ? 'Salvando...' : 'Salvar Chamada'}</span>
-        </button>
+        {botoesDesativados ? (
+          <button
+            type="button"
+            className="bg-(--orange) text-white border-none py-3 px-6 rounded-lg text-lg font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--dark-orange)"
+            onClick={handleIniciarEdicao}
+          >
+            <FontAwesomeIcon icon={faPen} />
+            <span>Editar Chamada</span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="bg-(--success-green) text-white border-none py-3 px-6 rounded-lg text-lg font-bold cursor-pointer flex items-center gap-2 transition-colors duration-200 hover:bg-(--success-green-hover) disabled:bg-gray-400 disabled:cursor-not-allowed"
+            onClick={handleSubmitChamada}
+            disabled={salvando}
+          >
+            <FontAwesomeIcon icon={faSave} />
+            <span>{salvando ? 'Salvando...' : 'Salvar Chamada'}</span>
+          </button>
+        )}
       </div>
     </div>
   );

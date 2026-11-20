@@ -13,10 +13,16 @@ import { UpdateChamadaDto } from './dto/update-chamada.dto';
 
 @Injectable()
 export class AlunosService {
+  private readonly faltasRegistradasPorDia = new Map<string, Set<number>>();
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly cryptoService: CryptoService,
   ) {}
+
+  private obterDataHojeKey(): string {
+    return new Date().toISOString().slice(0, 10);
+  }
 
   private decryptAluno<T extends Record<string, any>>(aluno: T): T {
     if (!aluno) return aluno;
@@ -181,8 +187,40 @@ export class AlunosService {
       throw new NotFoundException(`Aluno #${id} não encontrado.`);
     }
 
-    const novasFaltas =
-      dto.faltas !== undefined ? dto.faltas : existing.faltas + 1;
+    const hoje = this.obterDataHojeKey();
+    if (!this.faltasRegistradasPorDia.has(hoje)) {
+      this.faltasRegistradasPorDia.set(hoje, new Set<number>());
+    }
+    const ausentesHoje = this.faltasRegistradasPorDia.get(hoje)!;
+
+    let novasFaltas = existing.faltas;
+
+    if (dto.faltas !== undefined) {
+      novasFaltas = Math.max(0, dto.faltas);
+      if (dto.ausenteHoje === true) {
+        ausentesHoje.add(id);
+      } else if (dto.ausenteHoje === false) {
+        ausentesHoje.delete(id);
+      }
+    } else if (dto.ausenteHoje !== undefined) {
+      if (dto.ausenteHoje) {
+        if (!ausentesHoje.has(id)) {
+          novasFaltas = existing.faltas + 1;
+          ausentesHoje.add(id);
+        }
+      } else {
+        if (ausentesHoje.has(id)) {
+          novasFaltas = Math.max(0, existing.faltas - 1);
+          ausentesHoje.delete(id);
+        }
+      }
+    } else {
+      // Regra: um aluno não pode receber 2 faltas no mesmo dia
+      if (!ausentesHoje.has(id)) {
+        novasFaltas = existing.faltas + 1;
+        ausentesHoje.add(id);
+      }
+    }
 
     const updated = await this.prisma.aluno.update({
       where: { id },

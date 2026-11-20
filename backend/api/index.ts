@@ -67,3 +67,4 @@ export default async function handler(req: any, res: any) {
   await bootstrapServerless();
   return expressApp(req, res);
 }
+
