@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
@@ -25,7 +25,6 @@ function PaginaChamada() {
 
   const [alunos, setAlunos] = useState([]);
   const [turmas, setTurmas] = useState([]);
-  const [alunosFiltrados, setAlunosFiltrados] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(null);
 
@@ -111,7 +110,7 @@ function PaginaChamada() {
     buscarDados();
   }, []);
 
-  useEffect(() => {
+  const alunosFiltrados = useMemo(() => {
     let alunosProcessados = [...alunos];
 
     if (termoPesquisa) {
@@ -134,7 +133,7 @@ function PaginaChamada() {
       return 0;
     });
 
-    setAlunosFiltrados(alunosProcessados);
+    return alunosProcessados;
   }, [alunos, termoPesquisa, turmaSelecionada, sortConfig]);
 
   const handleAusenciaToggle = (alunoId) => {
