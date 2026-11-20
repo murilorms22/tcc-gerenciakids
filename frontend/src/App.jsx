@@ -9,6 +9,7 @@ import PaginaAlunosInfo from './pages/PaginaAlunosInfo';
 import PaginaChamada from './pages/PaginaChamada';
 import PaginaAgenda from './pages/PaginaAgenda';
 import PaginaAvisos from './pages/PaginaAvisos';
+import PaginaPareceres from './pages/PaginaPareceres';
 import Pagina403 from './pages/Pagina403';
 import AdminAlunos from './pages/Admin/AdminAlunos';
 import AdminTurmas from './pages/Admin/AdminTurmas';
@@ -29,6 +30,7 @@ function App() {
           <Route path="alunos/:id" element={<PaginaAlunosInfo />} />
           <Route path="avisos" element={<PaginaAvisos />} />
           <Route path="agenda" element={<PaginaAgenda />} />
+          <Route path="pareceres" element={<PaginaPareceres />} />
           <Route path="403" element={<Pagina403 />} />
 
           {/* Rotas restritas a PROFESSOR, DIRECAO e ADMIN */}

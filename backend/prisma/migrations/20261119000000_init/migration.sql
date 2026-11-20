@@ -133,3 +133,21 @@ ALTER TABLE `atividades` ADD CONSTRAINT `atividades_turmaId_fkey` FOREIGN KEY (`
 -- AddForeignKey
 ALTER TABLE `avisos` ADD CONSTRAINT `avisos_turmaId_fkey` FOREIGN KEY (`turmaId`) REFERENCES `turmas`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
+-- CreateTable
+CREATE TABLE `pareceres` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `titulo` VARCHAR(191) NOT NULL,
+    `periodo` VARCHAR(191) NOT NULL DEFAULT '1º Semestre / 2026',
+    `conteudo` TEXT NOT NULL,
+    `professorNome` VARCHAR(191) NOT NULL,
+    `alunoId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+
+    INDEX `pareceres_alunoId_idx`(`alunoId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `pareceres` ADD CONSTRAINT `pareceres_alunoId_fkey` FOREIGN KEY (`alunoId`) REFERENCES `alunos`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+

@@ -40,6 +40,8 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   public isUsingInMemoryFallback = false;
+  private inMemoryPareceres: any[] = [];
+  private inMemoryStateRef: any = null;
 
   async onModuleInit() {
     const dbUrl = process.env.DATABASE_URL || '';
@@ -68,12 +70,55 @@ export class PrismaService
       }
 
       try {
+        await this.$executeRawUnsafe(`
+          CREATE TABLE IF NOT EXISTS \`pareceres\` (
+            \`id\` INTEGER NOT NULL AUTO_INCREMENT,
+            \`titulo\` VARCHAR(191) NOT NULL,
+            \`periodo\` VARCHAR(191) NOT NULL DEFAULT '1º Semestre / 2026',
+            \`conteudo\` TEXT NOT NULL,
+            \`professorNome\` VARCHAR(191) NOT NULL,
+            \`alunoId\` INTEGER NOT NULL,
+            \`createdAt\` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+            \`updatedAt\` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+            INDEX \`pareceres_alunoId_idx\`(\`alunoId\`),
+            PRIMARY KEY (\`id\`)
+          ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+        `);
+      } catch {
+        // Ignora caso falhe
+      }
+
+      try {
         const userCount = await this.user.count();
         if (userCount === 0) {
           await this.seedInitialData();
         }
       } catch (err) {
         console.warn('Aviso ao verificar seed inicial:', err);
+      }
+
+      try {
+        const parecerRows = await this.$queryRawUnsafe<any[]>(
+          `SELECT COUNT(*) as total FROM \`pareceres\``,
+        );
+        const totalPareceres = Number(parecerRows?.[0]?.total ?? 0);
+        if (totalPareceres === 0) {
+          await this.$executeRawUnsafe(
+            `INSERT INTO \`pareceres\` (\`titulo\`, \`periodo\`, \`conteudo\`, \`professorNome\`, \`alunoId\`) VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)`,
+            'Desenvolvimento Socioemocional, Linguagem e Autonomia',
+            '1º Semestre / 2026',
+            'A aluna Helena adaptou-se muito bem à rotina do Maternal II. Participa com entusiasmo das rodas de música e demonstra excelente interação e empatia com os colegas.',
+            'Professor João Silva',
+            1,
+            'Coordenação Motora e Expressão Criativa',
+            '1º Semestre / 2026',
+            'O aluno Bernardo apresenta ótima concentração nas atividades de montagem com blocos lógicos e pintura, evoluindo continuamente na coordenação motora fina.',
+            'Professor João Silva',
+            4,
+          );
+        }
+      } catch {
+        // Ignora caso alunos 1 e 4 não existam ainda
       }
     } catch (err) {
       console.warn(
@@ -1020,6 +1065,227 @@ export class PrismaService
         },
       },
     });
+
+    this.inMemoryStateRef = state;
+    this.inMemoryPareceres = [
+      {
+        id: 1,
+        titulo: 'Desenvolvimento Socioemocional, Linguagem e Autonomia',
+        periodo: '1º Semestre / 2026',
+        conteudo:
+          'A aluna Helena adaptou-se muito bem à rotina do Maternal II. Participa com entusiasmo das rodas de música e demonstra excelente interação e empatia com os colegas.',
+        professorNome: 'Professor João Silva',
+        alunoId: 1,
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        id: 2,
+        titulo: 'Coordenação Motora e Expressão Criativa',
+        periodo: '1º Semestre / 2026',
+        conteudo:
+          'O aluno Bernardo apresenta ótima concentração nas atividades de montagem com blocos lógicos e pintura, evoluindo continuamente na coordenação motora fina.',
+        professorNome: 'Professor João Silva',
+        alunoId: 4,
+        createdAt: now,
+        updatedAt: now,
+      },
+    ];
+  }
+
+  private enrichParecerInMemory(p: any) {
+    const aluno =
+      this.inMemoryStateRef?.alunos.find((a: any) => a.id === p.alunoId) ||
+      null;
+    const turma = aluno
+      ? this.inMemoryStateRef?.turmas.find(
+          (t: any) => t.id === aluno.turmaId,
+        ) || null
+      : null;
+    return {
+      ...p,
+      aluno: aluno
+        ? {
+            id: aluno.id,
+            nome: aluno.nome,
+            foto_perfil_url: aluno.foto_perfil_url,
+            turmaId: aluno.turmaId,
+            turma,
+          }
+        : null,
+    };
+  }
+
+  async listarPareceres(filters?: {
+    alunoId?: number;
+    allowedAlunosIds?: number[];
+  }) {
+    if (this.isUsingInMemoryFallback) {
+      let list = [...this.inMemoryPareceres];
+      if (filters?.alunoId !== undefined) {
+        list = list.filter((p) => p.alunoId === Number(filters.alunoId));
+      }
+      if (Array.isArray(filters?.allowedAlunosIds)) {
+        list = list.filter((p) =>
+          filters.allowedAlunosIds!.includes(Number(p.alunoId)),
+        );
+      }
+      return list
+        .map((p) => this.enrichParecerInMemory(p))
+        .sort((a, b) => Number(b.id) - Number(a.id));
+    }
+
+    if (
+      Array.isArray(filters?.allowedAlunosIds) &&
+      filters.allowedAlunosIds.length === 0
+    ) {
+      return [];
+    }
+
+    const rows = await this.$queryRawUnsafe<any[]>(`
+      SELECT
+        p.id, p.titulo, p.periodo, p.conteudo, p.professorNome, p.alunoId, p.createdAt, p.updatedAt,
+        a.nome as alunoNome, a.foto_perfil_url as alunoFoto, a.turmaId as alunoTurmaId,
+        t.id as turmaId, t.nome as turmaNome, t.turno as turmaTurno
+      FROM \`pareceres\` p
+      LEFT JOIN \`alunos\` a ON a.id = p.alunoId
+      LEFT JOIN \`turmas\` t ON t.id = a.turmaId
+      ORDER BY p.createdAt DESC, p.id DESC
+    `);
+
+    return rows
+      .filter((row) => {
+        if (
+          filters?.alunoId !== undefined &&
+          Number(row.alunoId) !== Number(filters.alunoId)
+        ) {
+          return false;
+        }
+        if (
+          Array.isArray(filters?.allowedAlunosIds) &&
+          !filters.allowedAlunosIds.includes(Number(row.alunoId))
+        ) {
+          return false;
+        }
+        return true;
+      })
+      .map((row) => ({
+        id: Number(row.id),
+        titulo: row.titulo,
+        periodo: row.periodo,
+        conteudo: row.conteudo,
+        professorNome: row.professorNome,
+        alunoId: Number(row.alunoId),
+        createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+        aluno: row.alunoNome
+          ? {
+              id: Number(row.alunoId),
+              nome: row.alunoNome,
+              foto_perfil_url: row.alunoFoto,
+              turmaId: Number(row.alunoTurmaId),
+              turma: row.turmaNome
+                ? {
+                    id: Number(row.turmaId),
+                    nome: row.turmaNome,
+                    turno: row.turmaTurno,
+                  }
+                : null,
+            }
+          : null,
+      }));
+  }
+
+  async buscarParecerPorId(id: number) {
+    const all = await this.listarPareceres();
+    return all.find((p) => Number(p.id) === Number(id)) || null;
+  }
+
+  async criarParecer(data: {
+    titulo: string;
+    periodo: string;
+    conteudo: string;
+    professorNome: string;
+    alunoId: number;
+  }) {
+    if (this.isUsingInMemoryFallback) {
+      const nextId =
+        this.inMemoryPareceres.length > 0
+          ? Math.max(...this.inMemoryPareceres.map((p) => Number(p.id) || 0)) +
+            1
+          : 1;
+      const novo = {
+        id: nextId,
+        ...data,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      this.inMemoryPareceres.push(novo);
+      return this.enrichParecerInMemory(novo);
+    }
+
+    await this.$executeRawUnsafe(
+      `INSERT INTO \`pareceres\` (\`titulo\`, \`periodo\`, \`conteudo\`, \`professorNome\`, \`alunoId\`) VALUES (?, ?, ?, ?, ?)`,
+      data.titulo,
+      data.periodo,
+      data.conteudo,
+      data.professorNome,
+      Number(data.alunoId),
+    );
+    const all = await this.listarPareceres({ alunoId: Number(data.alunoId) });
+    return all[0];
+  }
+
+  async atualizarParecer(
+    id: number,
+    data: Partial<{
+      titulo: string;
+      periodo: string;
+      conteudo: string;
+      professorNome: string;
+      alunoId: number;
+    }>,
+  ) {
+    if (this.isUsingInMemoryFallback) {
+      const idx = this.inMemoryPareceres.findIndex(
+        (p) => Number(p.id) === Number(id),
+      );
+      if (idx === -1) return null;
+      this.inMemoryPareceres[idx] = {
+        ...this.inMemoryPareceres[idx],
+        ...data,
+        updatedAt: new Date(),
+      };
+      return this.enrichParecerInMemory(this.inMemoryPareceres[idx]);
+    }
+
+    const current = await this.buscarParecerPorId(id);
+    if (!current) return null;
+
+    await this.$executeRawUnsafe(
+      `UPDATE \`pareceres\` SET \`titulo\` = ?, \`periodo\` = ?, \`conteudo\` = ?, \`professorNome\` = ?, \`alunoId\` = ? WHERE \`id\` = ?`,
+      data.titulo ?? current.titulo,
+      data.periodo ?? current.periodo,
+      data.conteudo ?? current.conteudo,
+      data.professorNome ?? current.professorNome,
+      Number(data.alunoId ?? current.alunoId),
+      Number(id),
+    );
+
+    return this.buscarParecerPorId(id);
+  }
+
+  async deletarParecer(id: number) {
+    if (this.isUsingInMemoryFallback) {
+      this.inMemoryPareceres = this.inMemoryPareceres.filter(
+        (p) => Number(p.id) !== Number(id),
+      );
+      return;
+    }
+    await this.$executeRawUnsafe(
+      `DELETE FROM \`pareceres\` WHERE \`id\` = ?`,
+      Number(id),
+    );
   }
 
   async onModuleDestroy() {

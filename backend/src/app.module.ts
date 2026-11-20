@@ -5,6 +5,7 @@ import { AuditLogsModule } from './audit-logs/audit-logs.module';
 import { AtividadesModule } from './atividades/atividades.module';
 import { AuthModule } from './auth/auth.module';
 import { AvisosModule } from './avisos/avisos.module';
+import { PareceresModule } from './pareceres/pareceres.module';
 import { CryptoModule } from './common/crypto/crypto.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { AuditInterceptor } from './common/interceptors/audit.interceptor';
@@ -23,6 +24,7 @@ import { TurmasModule } from './turmas/turmas.module';
     AlunosModule,
     AtividadesModule,
     AvisosModule,
+    PareceresModule,
     AuditLogsModule,
   ],
   providers: [

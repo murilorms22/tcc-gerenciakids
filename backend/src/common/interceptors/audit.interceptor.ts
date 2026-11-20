@@ -124,6 +124,7 @@ export class AuditInterceptor implements NestInterceptor {
       responsaveis: 'Responsavel',
       atividades: 'Atividade',
       avisos: 'Aviso',
+      pareceres: 'Parecer',
       users: 'User',
     };
 

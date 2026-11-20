@@ -91,10 +91,26 @@ model Aluno {
   turma           Turma       @relation(fields: [turmaId], references: [id], onDelete: Restrict)
   responsavelId   Int
   responsavel     Responsavel @relation(fields: [responsavelId], references: [id], onDelete: Restrict)
+  pareceres       Parecer[]
 
   @@index([turmaId])
   @@index([responsavelId])
   @@map("alunos")
+}
+
+model Parecer {
+  id            Int      @id @default(autoincrement())
+  titulo        String
+  periodo       String   @default("1º Semestre / 2026")
+  conteudo      String   @db.Text
+  professorNome String
+  alunoId       Int
+  aluno         Aluno    @relation(fields: [alunoId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([alunoId])
+  @@map("pareceres")
 }
 
 model Atividade {

@@ -7,6 +7,7 @@ import {
   faBell,
   faCalendar,
   faClipboardCheck,
+  faBookOpen,
   faSignOutAlt,
   faUserShield,
   faChalkboardUser,
@@ -117,6 +118,17 @@ function Sidebar({ isOpen = false, onClose = () => {} }) {
               <NavLink to="/agenda" className={navLinkClass} onClick={onClose}>
                 <FontAwesomeIcon icon={faCalendar} className="w-5" />
                 <span>Agenda de Atividades</span>
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                to="/pareceres"
+                className={navLinkClass}
+                onClick={onClose}
+              >
+                <FontAwesomeIcon icon={faBookOpen} className="w-5" />
+                <span>Pareceres Pedagógicos</span>
               </NavLink>
             </li>
           </ul>
